@@ -37,3 +37,12 @@ body {
   list-style: none;
   padding: 0;
 }
+li {
+  background: #f8f8f8;
+  padding: 10px;
+  margin-bottom: 5px;
+  border-radius: 3px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
