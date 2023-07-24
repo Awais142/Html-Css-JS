@@ -18,6 +18,9 @@ function addTask() {
   if (task) {
     const li = document.createElement("li");
     li.textContent = task;
+    li.addEventListener("click", () => {
+      li.classList.toggle("completed");
+    });
 
     const deleteBtn = document.createElement("button");
     deleteBtn.textContent = "Delete";
