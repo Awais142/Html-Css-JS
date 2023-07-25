@@ -35,3 +35,39 @@ const clearBtn = document.getElementById("clear-btn");
 clearBtn.addEventListener("click", () => {
   todoList.innerHTML = "";
 });
+function addTask() {
+  const task = todoInput.value.trim();
+  if (task === "") {
+    alert("Please enter a task!");
+    return;
+  }
+  // Rest of the code remains unchanged
+}
+function saveTasks() {
+  const tasks = [];
+  todoList.querySelectorAll("li").forEach((li) => {
+    tasks.push({
+      text: li.textContent.replace("Delete", "").trim(),
+      completed: li.classList.contains("completed"),
+    });
+  });
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+function loadTasks() {
+  const tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+  tasks.forEach((task) => {
+    const li = document.createElement("li");
+    li.textContent = task.text;
+    if (task.completed) li.classList.add("completed");
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "Delete";
+    deleteBtn.onclick = () => li.remove();
+
+    li.appendChild(deleteBtn);
+    todoList.appendChild(li);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", loadTasks);
