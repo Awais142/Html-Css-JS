@@ -31,3 +31,7 @@ function addTask() {
     todoInput.value = "";
   }
 }
+const clearBtn = document.getElementById("clear-btn");
+clearBtn.addEventListener("click", () => {
+  todoList.innerHTML = "";
+});
