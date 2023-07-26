@@ -80,3 +80,9 @@ clearBtn.addEventListener("click", () => {
   todoList.innerHTML = "";
   saveTasks();
 });
+clearBtn.addEventListener("click", () => {
+  if (confirm("Are you sure you want to clear all tasks?")) {
+    todoList.innerHTML = "";
+    saveTasks();
+  }
+});
