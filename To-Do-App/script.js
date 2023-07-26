@@ -71,3 +71,12 @@ function loadTasks() {
 }
 
 document.addEventListener("DOMContentLoaded", loadTasks);
+addBtn.addEventListener("click", () => {
+  addTask();
+  saveTasks();
+});
+
+clearBtn.addEventListener("click", () => {
+  todoList.innerHTML = "";
+  saveTasks();
+});
