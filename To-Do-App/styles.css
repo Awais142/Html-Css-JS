@@ -50,3 +50,16 @@ li {
   text-decoration: line-through;
   color: gray;
 }
+/* styles.css - style delete button */
+button {
+  background: red;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+button:hover {
+  background: darkred;
+}
