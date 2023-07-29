@@ -46,3 +46,19 @@
   background-color: #d9534f;
   color: white;
 }
+.btn:hover {
+  background-color: #555;
+}
+
+.btn.operator:hover {
+  background-color: #f94e16;
+}
+
+.btn.clear:hover,
+.btn.delete:hover {
+  background-color: #c9302c;
+}
+
+.btn:active {
+  transform: scale(0.95);
+}
