@@ -25,3 +25,11 @@ document.querySelector(".clear").addEventListener("click", () => {
   currentInput = "";
   display.textContent = "0";
 });
+document
+  .querySelector(".btn[content='decimal']")
+  .addEventListener("click", () => {
+    if (!currentInput.includes(".")) {
+      currentInput += ".";
+      display.textContent = currentInput;
+    }
+  });
