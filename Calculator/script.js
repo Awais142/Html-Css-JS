@@ -21,3 +21,7 @@ buttons.forEach((button) => {
     }
   });
 });
+document.querySelector(".clear").addEventListener("click", () => {
+  currentInput = "";
+  display.textContent = "0";
+});
