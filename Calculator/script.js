@@ -33,3 +33,17 @@ document
       display.textContent = currentInput;
     }
   });
+window.addEventListener("keydown", (e) => {
+  const key = e.key;
+  if (!isNaN(key) || key === ".") {
+    currentInput += key;
+  } else if (["+", "-", "*", "/"].includes(key)) {
+    currentOperator = key;
+  } else if (key === "Enter") {
+    display.textContent = eval(currentInput);
+    currentInput = display.textContent;
+  } else if (key === "Escape") {
+    currentInput = "";
+    display.textContent = "0";
+  }
+});
