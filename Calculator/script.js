@@ -57,3 +57,17 @@ document.querySelector(".delete").addEventListener("click", () => {
   currentInput = currentInput.slice(0, -1);
   display.textContent = currentInput || "0";
 });
+// script.js
+document.querySelector(".btn.operator").addEventListener("click", () => {
+  if (currentOperator && currentInput) {
+    try {
+      const result = eval(currentInput); // Use of `eval` for simplicity here; better to use a safer calculation approach for production
+      display.textContent = formatResult(result);
+      currentInput = result.toString();
+      currentOperator = null;
+    } catch (error) {
+      display.textContent = "Error";
+      currentInput = "";
+    }
+  }
+});
