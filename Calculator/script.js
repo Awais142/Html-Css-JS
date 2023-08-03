@@ -47,3 +47,13 @@ window.addEventListener("keydown", (e) => {
     display.textContent = "0";
   }
 });
+function formatResult(value) {
+  return parseFloat(value).toFixed(2);
+}
+if (currentOperator === "/" && parseFloat(currentInput) === 0) {
+  display.textContent = "Error";
+}
+document.querySelector(".delete").addEventListener("click", () => {
+  currentInput = currentInput.slice(0, -1);
+  display.textContent = currentInput || "0";
+});
