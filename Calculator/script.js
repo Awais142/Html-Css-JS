@@ -23,14 +23,14 @@ buttons.forEach((button) => {
 
     // Handle delete button
     if (button.classList.contains("delete")) {
-      if (currentInput.length > 0) {
+      if (!resultDisplayed && currentInput.length > 0) {
         currentInput = currentInput.slice(0, -1);
+        display.textContent = currentInput || "0";
       }
-      display.textContent = currentInput || "0";
       return;
     }
 
-    // Handle operator buttons
+    // Handle operator buttons (except equals)
     if (button.classList.contains("operator") && value !== "=") {
       if (currentInput) {
         if (previousInput && currentOperator) {
@@ -51,17 +51,17 @@ buttons.forEach((button) => {
     }
 
     // Handle equals button
-    if (button.classList.contains("equals")) {
+    if (value === "=") {
       if (currentOperator && previousInput && currentInput) {
         display.textContent = calculate(
           previousInput,
           currentInput,
           currentOperator
         );
-        previousInput = display.textContent;
+        previousInput = display.textContent; // Store result for chaining operations
         currentInput = "";
         currentOperator = null;
-        resultDisplayed = true;
+        resultDisplayed = true; // Set flag indicating result has been displayed
       }
       return;
     }
