@@ -304,16 +304,6 @@ nav {
   display: none;
 }
 
-.text-content-fluid {
-  display: flex;
-  position: absolute;
-  transform: translate(-50%, -50%);
-  top: 53%;
-  left: 50%;
-  letter-spacing: 25px;
-  font-size: 50px;
-  font-family: verdana;
-}
 @media (max-width: 767px) {
   .text-content-fluid {
     position: absolute;
