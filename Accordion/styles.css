@@ -1,0 +1,72 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #f0f4f8;
+}
+
+.accordion {
+  width: 80%;
+  max-width: 600px;
+}
+
+.accordion-item {
+  border-radius: 8px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.accordion-header {
+  background-color: #4caf50;
+  color: #fff;
+  padding: 15px 20px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.3s;
+}
+
+.accordion-header:hover {
+  background-color: #43a047;
+}
+
+.accordion-header h2 {
+  font-size: 18px;
+}
+
+.accordion-header .icon {
+  font-size: 24px;
+  transition: transform 0.3s ease;
+}
+
+.accordion-content {
+  background-color: #fff;
+  padding: 0 20px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
+
+.accordion-content p {
+  padding: 15px 0;
+  color: #333;
+}
+
+.accordion-content.show {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.rotate-icon {
+  transform: rotate(45deg);
+}
