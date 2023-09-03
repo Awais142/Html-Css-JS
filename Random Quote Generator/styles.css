@@ -26,7 +26,7 @@ body {
 
 .quote-container h1 {
   font-size: 24px;
-  color: #4caf50;
+  color: #ff5f6d;
   margin-bottom: 20px;
 }
 
@@ -44,7 +44,7 @@ body {
 
 button {
   padding: 10px 20px;
-  background-color: #4caf50;
+  background-color: #ff5f6d;
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -54,5 +54,5 @@ button {
 }
 
 button:hover {
-  background-color: #43a047;
+  background-color: #ff5f6d;
 }
