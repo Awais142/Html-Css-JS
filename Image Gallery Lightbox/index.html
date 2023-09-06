@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image Gallery with Lightbox</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="gallery">
+      <!-- Add images with captions -->
+      <div class="gallery-item" onclick="openLightbox(this)">
+        <img src="image1.jpg" alt="Image 1" />
+        <p class="caption">Beautiful Landscape 1</p>
+      </div>
+      <div class="gallery-item" onclick="openLightbox(this)">
+        <img src="image2.jpg" alt="Image 2" />
+        <p class="caption">Beautiful Landscape 2</p>
+      </div>
+      <div class="gallery-item" onclick="openLightbox(this)">
+        <img src="image3.jpg" alt="Image 3" />
+        <p class="caption">Beautiful Landscape 3</p>
+      </div>
+      <!-- Add more images as needed -->
+    </div>
+
+    <!-- Lightbox overlay -->
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+      <span class="close">&times;</span>
+      <img class="lightbox-image" id="lightboxImage" />
+      <p class="lightbox-caption" id="lightboxCaption"></p>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
