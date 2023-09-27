@@ -70,7 +70,7 @@ h6 span {
   height: 36px;
   border-radius: 50%;
   color: #ffeba7;
-  background-color: #102770;
+  background-color: #1fddff;
   font-family: "unicons";
   content: "\eb4f";
   z-index: 20;
@@ -255,17 +255,17 @@ h6 span {
   text-align: center;
   border: none;
   background-color: #ffeba7;
-  color: #102770;
+  color: #1fddff;
   box-shadow: 0 8px 24px 0 rgba(255, 235, 167, 0.2);
 }
 .btn:active,
 .btn:focus {
-  background-color: #102770;
+  background-color: #1fddff;
   color: #ffeba7;
   box-shadow: 0 8px 24px 0 rgba(16, 39, 112, 0.2);
 }
 .btn:hover {
-  background-color: #102770;
+  background-color: #1fddff;
   color: #ffeba7;
   box-shadow: 0 8px 24px 0 rgba(16, 39, 112, 0.2);
 }
