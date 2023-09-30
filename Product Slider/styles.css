@@ -249,7 +249,7 @@ body {
 }
 .center .bottle-img {
   position: absolute;
-  top: 25%;
+  top: 15%;
   left: 0;
   transform: scale(1.6);
 }
