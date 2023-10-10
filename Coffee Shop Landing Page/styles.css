@@ -52,3 +52,28 @@ body {
 .cta-btn:hover {
   background-color: #a3774f;
 }
+.services,
+.top-rated,
+.contact {
+  padding: 3em 1em;
+  text-align: center;
+}
+.service-cards,
+.product-cards {
+  display: flex;
+  gap: 1em;
+  justify-content: center;
+}
+.service-card,
+.product-card {
+  background-color: #fff;
+  padding: 1em;
+  width: 250px;
+  border-radius: 10px;
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+}
+.service-card:hover,
+.product-card:hover {
+  transform: translateY(-10px);
+}
