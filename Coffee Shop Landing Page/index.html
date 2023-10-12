@@ -3,8 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="styles.css" />
     <title>Coffee House</title>
+    <link rel="stylesheet" href="styles.css" />
+    <!-- Font Awesome Icons CDN -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <script src="script.js" defer></script>
   </head>
   <body>
     <!-- Navbar -->
@@ -19,10 +25,23 @@
 
     <!-- Hero Section -->
     <section class="hero">
-      <div class="hero-content">
+      <div class="hero-left">
         <h1>Welcome to Coffee House</h1>
-        <p>Your daily dose of caffeine, crafted with love</p>
+        <p>
+          Your daily dose of caffeine, crafted with love and passion. Discover
+          our premium coffee blends that fuel your day.
+        </p>
         <button class="cta-btn">Explore Menu</button>
+      </div>
+      <div class="hero-right">
+        <img
+          src="https://images.pexels.com/photos/3028951/pexels-photo-3028951.jpeg"
+          alt="Coffee cup on table"
+        />
+        <img
+          src="https://images.pexels.com/photos/4342590/pexels-photo-4342590.jpeg"
+          alt="Espresso machine"
+        />
       </div>
     </section>
 
@@ -32,7 +51,7 @@
       <div class="service-cards">
         <div class="service-card">
           <img
-            src="https://www.pexels.com/photo/coffee-making-4342590/"
+            src="https://images.pexels.com/photos/4342590/pexels-photo-4342590.jpeg"
             alt="Coffee Preparation"
           />
           <h3>High-Quality Beans</h3>
@@ -43,7 +62,7 @@
         </div>
         <div class="service-card">
           <img
-            src="https://www.pexels.com/photo/espresso-machine-3028951/"
+            src="https://images.pexels.com/photos/3028951/pexels-photo-3028951.jpeg"
             alt="Espresso Machine"
           />
           <h3>Modern Espresso Machines</h3>
@@ -51,11 +70,45 @@
         </div>
         <div class="service-card">
           <img
-            src="https://www.pexels.com/photo/luxurious-ambiance-3182541/"
+            src="https://images.pexels.com/photos/3182541/pexels-photo-3182541.jpeg"
             alt="Relaxing Ambiance"
           />
           <h3>Relaxing Ambiance</h3>
           <p>Cozy, comfortable, and perfect for work or unwinding.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Top-Rated Products Section -->
+    <section class="top-rated">
+      <h2>Top-Rated Coffees</h2>
+      <div class="product-cards">
+        <div class="product-card">
+          <img
+            src="https://images.pexels.com/photos/3029003/pexels-photo-3029003.jpeg"
+            alt="Latte Art"
+          />
+          <h3>Signature Latte</h3>
+          <p>A rich, creamy latte made with love.</p>
+          <button>Order Now</button>
+        </div>
+        <div class="product-card">
+          <img
+            src="https://images.pexels.com/photos/4210841/pexels-photo-4210841.jpeg"
+            alt="Cappuccino"
+          />
+          <h3>Classic Cappuccino</h3>
+          <p>A classic blend, perfect for any time of day.</p>
+          <button>Order Now</button>
+        </div>
+        <div class="product-card">
+          <img
+            src="https://images.pexels.com/photos/4222542/pexels-photo-4222542.jpeg"
+            alt="Black Coffee"
+          />
+          <h3>Pure Black Coffee</h3>
+          <p>For the true coffee enthusiasts.</p>
+          <button>Order Now</button>
         </div>
       </div>
     </section>
@@ -70,10 +123,10 @@
         <button type="submit">Send Message</button>
       </form>
     </section>
+
     <!-- Footer -->
     <footer>
       <p>&copy; 2024 Coffee House. All rights reserved.</p>
     </footer>
-    <script src="script.js"></script>
   </body>
 </html>
