@@ -29,7 +29,7 @@ async function fetchProfile() {
           }</span>
           <span><strong>Twitter:</strong> ${
             data.twitter_username
-              ? "@" + data.twitter_username
+              ? `<a href="https://twitter.com/${data.twitter_username}" target="_blank">@${data.twitter_username}</a>`
               : "Not available"
           }</span>
           <span><strong>Member since:</strong> ${new Date(
@@ -41,6 +41,10 @@ async function fetchProfile() {
               <span>Repos</span>
             </div>
             <div class="stat">
+              <p>${data.public_gists}</p>
+              <span>Gists</span>
+            </div>
+            <div class="stat">
               <p>${data.followers}</p>
               <span>Followers</span>
             </div>
@@ -48,6 +52,13 @@ async function fetchProfile() {
               <p>${data.following}</p>
               <span>Following</span>
             </div>
+          </div>
+          <div class="additional-info">
+            <p><strong>Blog:</strong> ${
+              data.blog
+                ? `<a href="${data.blog}" target="_blank">${data.blog}</a>`
+                : "Not available"
+            }</p>
           </div>
           <a href="${data.html_url}" target="_blank">Visit GitHub Profile</a>
         `;
