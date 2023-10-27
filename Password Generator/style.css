@@ -10,14 +10,14 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: #23242a;
+    background: #1a1a2e;
 }
 
 .container {
-    background: #2a2b2f;
+    background: #16213e;
     padding: 2rem;
     border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     color: #fff;
     width: 90%;
     max-width: 400px;
@@ -26,15 +26,20 @@ body {
 h1 {
     text-align: center;
     margin-bottom: 1.5rem;
-    color: #45f3ff;
+    color: #0f3460;
+    background: linear-gradient(45deg, #4CAF50, #2196F3);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .password-box {
     position: relative;
-    background: #18191c;
+    background: #1f4068;
     padding: 1rem;
     border-radius: 5px;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid #0f3460;
 }
 
 #password {
@@ -51,15 +56,62 @@ h1 {
     right: 10px;
     top: 50%;
     transform: translateY(-50%);
-    background: #45f3ff;
+    background: #4CAF50;
     border: none;
     padding: 5px 10px;
     border-radius: 3px;
     cursor: pointer;
+    color: white;
+    transition: 0.3s;
+}
+
+#copy-btn:hover {
+    background: #45a049;
+}
+
+.strength-meter {
+    margin: 1rem 0;
+    padding: 0.5rem;
+    background: #1f4068;
+    border-radius: 5px;
+}
+
+.strength-meter p {
+    margin-bottom: 0.5rem;
+    color: #fff;
+}
+
+.strength-bar {
+    height: 10px;
+    background: #0f3460;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+#strength-indicator {
+    height: 100%;
+    width: 0;
+    transition: all 0.3s;
+    border-radius: 5px;
+}
+
+#strength-indicator.weak {
+    width: 33.33%;
+    background: #ff4444;
+}
+
+#strength-indicator.medium {
+    width: 66.66%;
+    background: #ffbb33;
+}
+
+#strength-indicator.strong {
+    width: 100%;
+    background: #00C851;
 }
 
 .settings {
-    margin-bottom: 1.5rem;
+    margin: 1.5rem 0;
 }
 
 .setting {
@@ -67,21 +119,57 @@ h1 {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
+    padding: 0.5rem;
+    background: #1f4068;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+.setting:hover {
+    background: #0f3460;
+}
+
+.setting label {
+    color: #fff;
+}
+
+input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+input[type="number"] {
+    width: 60px;
+    padding: 5px;
+    border: none;
+    border-radius: 3px;
+    background: #0f3460;
+    color: #fff;
+    text-align: center;
 }
 
 #generate-btn {
     width: 100%;
     padding: 1rem;
     border: none;
-    background: #45f3ff;
-    color: #23242a;
+    background: linear-gradient(45deg, #4CAF50, #2196F3);
+    color: #fff;
     font-size: 1.1rem;
     font-weight: bold;
     border-radius: 5px;
     cursor: pointer;
     transition: 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 #generate-btn:hover {
-    background: #23f7ff;
+    background: linear-gradient(45deg, #45a049, #1976D2);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+#generate-btn:active {
+    transform: translateY(0);
 }
