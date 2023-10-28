@@ -62,3 +62,63 @@ h1 {
     background: #0083b0;
     transform: translateY(-2px);
 }
+
+/* Weather Display Styles */
+.weather-display {
+    max-width: 600px;
+    margin: 2rem auto;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.current-weather {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2rem;
+    color: white;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.weather-icon {
+    font-size: 5rem;
+    margin-bottom: 1rem;
+    color: #ffd700;
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+}
+
+.weather-info h2 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.temperature {
+    font-size: 3.5rem;
+    font-weight: bold;
+    margin: 1rem 0;
+}
+
+.description {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    text-transform: capitalize;
+}
+
+.details {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+.detail {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.detail i {
+    font-size: 1.5rem;
+    color: #00b4db;
+}

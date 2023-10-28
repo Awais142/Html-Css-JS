@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather Dashboard</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="container">
@@ -15,6 +16,29 @@
                 <button id="search-btn">Search</button>
             </div>
         </header>
+
+        <main class="weather-display" id="weather-display">
+            <div class="current-weather">
+                <div class="weather-icon">
+                    <i class="fas fa-cloud-sun"></i>
+                </div>
+                <div class="weather-info">
+                    <h2 class="city">City Name</h2>
+                    <p class="temperature">--°C</p>
+                    <p class="description">Weather Description</p>
+                    <div class="details">
+                        <div class="detail">
+                            <i class="fas fa-tint"></i>
+                            <span class="humidity">--%</span>
+                        </div>
+                        <div class="detail">
+                            <i class="fas fa-wind"></i>
+                            <span class="wind">-- km/h</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
     <script src="script.js"></script>
 </body>
