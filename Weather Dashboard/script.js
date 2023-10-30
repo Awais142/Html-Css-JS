@@ -1,6 +1,6 @@
 // OpenWeatherMap API configuration
-const API_KEY = ''; // You'll need to add your API key here
-const BASE_URL = 'https://api.openweathermap.org/data/2.5/weather';
+const API_KEY = "d72cd891e465bae08c93fa435305316f";
+const BASE_URL = "https://api.openweathermap.org/data/2.5/weather";
 
 // DOM Elements
 const searchInput = document.getElementById('search-input');
@@ -45,13 +45,33 @@ async function handleSearch() {
     const city = searchInput.value.trim();
     if (!city) return;
 
+    // Show loading state
+    showLoading();
+
     try {
         const weatherData = await getWeatherData(city);
         displayWeatherData(weatherData);
         searchInput.value = '';
     } catch (error) {
         showError('City not found. Please try again.');
+    } finally {
+        // Hide loading state
+        hideLoading();
     }
+}
+
+// Show loading state
+function showLoading() {
+    weatherDisplay.style.opacity = '0.5';
+    searchBtn.disabled = true;
+    searchBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+}
+
+// Hide loading state
+function hideLoading() {
+    weatherDisplay.style.opacity = '1';
+    searchBtn.disabled = false;
+    searchBtn.textContent = 'Search';
 }
 
 // Fetch weather data
@@ -85,6 +105,12 @@ function displayWeatherData(data) {
     const iconClass = weatherIcons[weatherMain] || 'fas fa-cloud';
     weatherIcon.className = iconClass;
 
+    // Add animation class to weather icon
+    weatherIcon.classList.add('weather-icon-animation');
+    setTimeout(() => {
+        weatherIcon.classList.remove('weather-icon-animation');
+    }, 1000);
+
     // Show the weather display with animation
     weatherDisplay.style.opacity = '1';
 }
@@ -102,3 +128,9 @@ function showError(message) {
         toast.remove();
     }, 3000);
 }
+
+// Initialize with a default city
+window.addEventListener('load', () => {
+    handleSearch('London');
+    searchInput.value = 'London';
+});
