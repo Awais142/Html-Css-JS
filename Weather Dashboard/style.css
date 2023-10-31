@@ -9,6 +9,7 @@ body {
     background: linear-gradient(135deg, #1e3c72, #2a5298);
     min-height: 100vh;
     padding: 2rem;
+    color: white;
 }
 
 .container {
@@ -16,16 +17,20 @@ body {
     margin: 0 auto;
 }
 
+/* Header Styles */
 header {
     text-align: center;
     margin-bottom: 2rem;
 }
 
 h1 {
-    color: white;
     font-size: 2.5rem;
     margin-bottom: 1.5rem;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(45deg, #fff, #a3bffa);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .search-box {
@@ -43,7 +48,14 @@ h1 {
     border-radius: 25px;
     font-size: 1rem;
     outline: none;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    color: white;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+#search-input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
 }
 
 #search-btn {
@@ -65,8 +77,6 @@ h1 {
 
 /* Weather Display Styles */
 .weather-display {
-    max-width: 600px;
-    margin: 2rem auto;
     opacity: 1;
     transition: opacity 0.3s ease;
 }
@@ -76,9 +86,53 @@ h1 {
     backdrop-filter: blur(10px);
     border-radius: 20px;
     padding: 2rem;
-    color: white;
-    text-align: center;
+    margin-bottom: 2rem;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.weather-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.location-info .city {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.location-info .date {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.temp-unit-toggle {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.unit-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.unit-btn.active {
+    background: #00b4db;
+}
+
+.weather-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.main-temp {
+    text-align: center;
 }
 
 .weather-icon {
@@ -88,6 +142,165 @@ h1 {
     text-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
 }
 
+.temperature {
+    font-size: 3.5rem;
+    font-weight: bold;
+    margin: 1rem 0;
+}
+
+.description {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.9);
+    text-transform: capitalize;
+}
+
+.weather-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+}
+
+.detail-item i {
+    font-size: 1.5rem;
+    color: #00b4db;
+}
+
+.detail-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.detail-info .label {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Hourly Forecast Styles */
+.hourly-forecast {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.hourly-forecast h3 {
+    margin-bottom: 1.5rem;
+}
+
+.forecast-scroll {
+    overflow-x: auto;
+    padding-bottom: 1rem;
+}
+
+.forecast-container {
+    display: flex;
+    gap: 1.5rem;
+    padding: 0.5rem;
+}
+
+.forecast-item {
+    min-width: 100px;
+    text-align: center;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+}
+
+.forecast-item .time {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.forecast-item i {
+    font-size: 1.5rem;
+    color: #ffd700;
+    margin: 0.5rem 0;
+}
+
+/* Additional Info Styles */
+.additional-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.info-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2rem;
+}
+
+.info-card h3 {
+    margin-bottom: 1.5rem;
+}
+
+.sun-times {
+    display: flex;
+    justify-content: space-around;
+}
+
+.sun-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.sun-item i {
+    font-size: 2rem;
+    color: #ffd700;
+}
+
+.time-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.time-info .label {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.aqi-display {
+    text-align: center;
+}
+
+.aqi-number {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.aqi-text {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .weather-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .additional-info {
+        grid-template-columns: 1fr;
+    }
+
+    .weather-details {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Animations */
 .weather-icon-animation {
     animation: scaleAndRotate 1s ease-out;
 }
@@ -103,39 +316,23 @@ h1 {
     }
 }
 
-.weather-info h2 {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
+#search-btn:disabled {
+    background: #cccccc;
+    cursor: not-allowed;
+    transform: none;
 }
 
-.temperature {
-    font-size: 3.5rem;
-    font-weight: bold;
-    margin: 1rem 0;
+.fa-spinner {
+    animation: spin 1s linear infinite;
 }
 
-.description {
-    font-size: 1.2rem;
-    margin-bottom: 1.5rem;
-    text-transform: capitalize;
-}
-
-.details {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    margin-top: 1rem;
-}
-
-.detail {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.detail i {
-    font-size: 1.5rem;
-    color: #00b4db;
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 /* Error Toast Styles */
@@ -161,24 +358,5 @@ h1 {
     to {
         transform: translate(-50%, 0);
         opacity: 1;
-    }
-}
-
-#search-btn:disabled {
-    background: #cccccc;
-    cursor: not-allowed;
-    transform: none;
-}
-
-.fa-spinner {
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
     }
 }
