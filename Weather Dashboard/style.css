@@ -6,7 +6,10 @@
 }
 
 body {
-    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    /* Using "Royal" gradient from uigradients.com */
+    background: #141E30;
+    background: -webkit-linear-gradient(to right, #243B55, #141E30);
+    background: linear-gradient(to right, #243B55, #141E30);
     min-height: 100vh;
     padding: 2rem;
     color: white;
