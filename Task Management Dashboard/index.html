@@ -5,126 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task Management Dashboard</title>
     <link rel="stylesheet" href="styles.css">
+    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div class="dashboard">
-        <!-- Sidebar -->
-        <nav class="sidebar">
-            <div class="logo">
-                <i class="fas fa-tasks"></i>
-                <span>TaskMaster</span>
-            </div>
-            <ul class="nav-links">
-                <li class="active"><i class="fas fa-home"></i> Dashboard</li>
-                <li><i class="fas fa-list"></i> Tasks</li>
-                <li><i class="fas fa-calendar"></i> Calendar</li>
-                <li><i class="fas fa-chart-bar"></i> Statistics</li>
-                <li><i class="fas fa-cog"></i> Settings</li>
-            </ul>
-        </nav>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Header -->
-            <header>
-                <div class="search-bar">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search tasks...">
-                </div>
-                <div class="user-profile">
-                    <i class="fas fa-bell"></i>
-                    <div class="profile-pic">JD</div>
-                </div>
-            </header>
-
-            <!-- Dashboard Content -->
-            <div class="dashboard-content">
-                <h1>Dashboard</h1>
-                
-                <!-- Quick Stats -->
-                <div class="quick-stats">
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-tasks"></i>
-                        </div>
-                        <div class="stat-details">
-                            <h3>Total Tasks</h3>
-                            <p>0</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-spinner"></i>
-                        </div>
-                        <div class="stat-details">
-                            <h3>In Progress</h3>
-                            <p>0</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-check-circle"></i>
-                        </div>
-                        <div class="stat-details">
-                            <h3>Completed</h3>
-                            <p>0</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Task List Section -->
-                <div class="task-section">
-                    <div class="task-header">
-                        <h2>Recent Tasks</h2>
-                        <button id="addTaskBtn" class="btn-primary">
-                            <i class="fas fa-plus"></i> Add Task
-                        </button>
-                    </div>
-                    <div class="task-list">
-                        <!-- Tasks will be added here dynamically -->
-                    </div>
-                </div>
-            </div>
-        </main>
+    <div class="dashboard-container">
+        <!-- Content will be added in subsequent commits -->
     </div>
-
-    <!-- Add Task Modal -->
-    <div class="modal" id="addTaskModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Add New Task</h2>
-                <button class="close-modal">&times;</button>
-            </div>
-            <form id="addTaskForm">
-                <div class="form-group">
-                    <label for="taskTitle">Title</label>
-                    <input type="text" id="taskTitle" required>
-                </div>
-                <div class="form-group">
-                    <label for="taskDescription">Description</label>
-                    <textarea id="taskDescription" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="taskPriority">Priority</label>
-                    <select id="taskPriority" required>
-                        <option value="low">Low</option>
-                        <option value="medium">Medium</option>
-                        <option value="high">High</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="taskDueDate">Due Date</label>
-                    <input type="date" id="taskDueDate" required>
-                </div>
-                <div class="form-actions">
-                    <button type="submit" class="btn-primary">Add Task</button>
-                    <button type="button" class="btn-secondary cancel-modal">Cancel</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
     <script src="script.js"></script>
 </body>
 </html>
