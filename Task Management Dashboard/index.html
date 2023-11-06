@@ -10,8 +10,74 @@
 </head>
 <body>
     <div class="dashboard-container">
-        <!-- Content will be added in subsequent commits -->
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>TaskMaster</h1>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active">
+                        <a href="#"><i class="fas fa-home"></i> Dashboard</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fas fa-tasks"></i> Tasks</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fas fa-calendar"></i> Calendar</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fas fa-chart-bar"></i> Reports</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search tasks...">
+                </div>
+                <div class="header-right">
+                    <button id="addTaskBtn" class="btn-primary">
+                        <i class="fas fa-plus"></i> Add Task
+                    </button>
+                    <div class="user-profile">
+                        <img src="https://via.placeholder.com/40" alt="User Profile">
+                        <span>John Doe</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- Quick Stats Section -->
+                <section class="quick-stats">
+                    <!-- Will be populated by JavaScript -->
+                </section>
+
+                <!-- Task List Section -->
+                <section class="task-section">
+                    <h2>My Tasks</h2>
+                    <div class="task-filters">
+                        <button class="active">All</button>
+                        <button>In Progress</button>
+                        <button>Completed</button>
+                    </div>
+                    <div class="task-list">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </section>
+            </div>
+        </main>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
