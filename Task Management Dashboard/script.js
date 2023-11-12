@@ -224,3 +224,161 @@ function updateStats() {
         </div>
     `;
 }
+// Modal Animation and Validation Functions
+function showModal() {
+    addTaskModal.classList.add('active');
+    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    
+    // Set minimum date to today for the due date input
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('taskDueDate').min = today;
+    
+    // Focus on the title input
+    setTimeout(() => {
+        document.getElementById('taskTitle').focus();
+    }, 300);
+}
+
+function hideModal() {
+    addTaskModal.classList.remove('active');
+    document.body.style.overflow = ''; // Restore scrolling
+    addTaskForm.reset();
+    clearValidation();
+}
+
+function validateForm() {
+    const title = document.getElementById('taskTitle').value.trim();
+    const dueDate = document.getElementById('taskDueDate').value;
+    const priority = document.getElementById('taskPriority').value;
+    
+    let isValid = true;
+    clearValidation();
+
+    if (title.length < 3) {
+        showError('taskTitle', 'Title must be at least 3 characters long');
+        isValid = false;
+    }
+
+    if (!dueDate) {
+        showError('taskDueDate', 'Please select a due date');
+        isValid = false;
+    }
+
+    if (!priority) {
+        showError('taskPriority', 'Please select a priority level');
+        isValid = false;
+    }
+
+    return isValid;
+}
+
+function showError(fieldId, message) {
+    const field = document.getElementById(fieldId);
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'error-message';
+    errorDiv.textContent = message;
+    field.classList.add('error');
+    field.parentNode.appendChild(errorDiv);
+}
+
+function clearValidation() {
+    // Remove all error messages
+    document.querySelectorAll('.error-message').forEach(el => el.remove());
+    document.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
+}
+
+// Update existing event listeners
+addTaskBtn.addEventListener('click', showModal);
+closeModalBtn.addEventListener('click', hideModal);
+cancelModalBtn.addEventListener('click', hideModal);
+
+// Update form submission
+addTaskForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    if (!validateForm()) {
+        return;
+    }
+
+    const formData = new FormData(addTaskForm);
+    const taskData = {
+        title: formData.get('taskTitle').trim(),
+        description: formData.get('taskDescription').trim(),
+        priority: formData.get('taskPriority'),
+        dueDate: formData.get('taskDueDate')
+    };
+
+    addTask(taskData);
+    hideModal();
+
+    // Show success notification
+    showNotification('Task added successfully!');
+});
+
+// Notification System
+function showNotification(message, type = 'success') {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.innerHTML = `
+        <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+        <span>${message}</span>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Animate in
+    setTimeout(() => notification.classList.add('show'), 10);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+
+// Add CSS for notifications and form validation
+const style = document.createElement('style');
+style.textContent = `
+    .notification {
+        position: fixed;
+        top: 20px;
+        right: -300px;
+        background: var(--white);
+        padding: 15px 20px;
+        border-radius: var(--border-radius-md);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: right 0.3s ease;
+        z-index: 1100;
+    }
+
+    .notification.show {
+        right: 20px;
+    }
+
+    .notification.success {
+        border-left: 4px solid var(--success-color);
+    }
+
+    .notification.success i {
+        color: var(--success-color);
+    }
+
+    .error-message {
+        color: var(--danger-color);
+        font-size: 0.85rem;
+        margin-top: 4px;
+    }
+
+    .error {
+        border-color: var(--danger-color) !important;
+    }
+
+    .form-group {
+        position: relative;
+    }
+`;
+
+document.head.appendChild(style);
