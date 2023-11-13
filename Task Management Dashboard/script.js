@@ -382,3 +382,217 @@ style.textContent = `
 `;
 
 document.head.appendChild(style);
+// Task Filtering and Sorting
+let sortCriteria = 'dueDate'; // Default sort
+let sortDirection = 'asc'; // Default direction
+
+// Enhanced updateTaskList function with sorting
+function updateTaskList(searchTerm = '') {
+    let filteredTasks = [...tasks];
+
+    // Apply search filter
+    if (searchTerm) {
+        const searchTermLower = searchTerm.toLowerCase();
+        filteredTasks = filteredTasks.filter(task => 
+            task.title.toLowerCase().includes(searchTermLower) ||
+            task.description.toLowerCase().includes(searchTermLower)
+        );
+    }
+
+    // Apply status filter
+    if (currentFilter !== 'all') {
+        filteredTasks = filteredTasks.filter(task => {
+            if (currentFilter === 'in progress') return task.status === 'pending';
+            return task.status === currentFilter;
+        });
+    }
+
+    // Apply sorting
+    filteredTasks.sort((a, b) => {
+        let compareResult = 0;
+        
+        switch (sortCriteria) {
+            case 'dueDate':
+                compareResult = new Date(a.dueDate) - new Date(b.dueDate);
+                break;
+            case 'priority':
+                const priorityOrder = { high: 0, medium: 1, low: 2 };
+                compareResult = priorityOrder[a.priority] - priorityOrder[b.priority];
+                break;
+            case 'title':
+                compareResult = a.title.localeCompare(b.title);
+                break;
+            case 'status':
+                compareResult = a.status.localeCompare(b.status);
+                break;
+        }
+        
+        return sortDirection === 'asc' ? compareResult : -compareResult;
+    });
+
+    // Update task counter
+    const taskCounter = document.querySelector('.task-counter');
+    if (taskCounter) {
+        taskCounter.textContent = `${filteredTasks.length} ${filteredTasks.length === 1 ? 'task' : 'tasks'}`;
+    }
+
+    // Update DOM with enhanced task cards
+    taskList.innerHTML = filteredTasks.map(task => `
+        <div class="task-card ${task.status}" data-id="${task.id}">
+            <div class="task-priority ${task.priority}">
+                <span class="priority-indicator"></span>
+                ${task.priority}
+            </div>
+            <div class="task-content">
+                <h3>${task.title}</h3>
+                <p>${task.description || 'No description provided'}</p>
+                <div class="task-meta">
+                    <span class="due-date ${isOverdue(task.dueDate) ? 'overdue' : ''}">
+                        <i class="fas fa-calendar-alt"></i>
+                        ${formatDueDate(task.dueDate)}
+                    </span>
+                    <span class="status ${task.status}">
+                        <i class="fas ${task.status === 'completed' ? 'fa-check-circle' : 'fa-clock'}"></i>
+                        ${task.status}
+                    </span>
+                </div>
+            </div>
+            <div class="task-actions">
+                <button onclick="toggleTaskStatus(${task.id})" class="btn-icon" title="${task.status === 'completed' ? 'Mark as pending' : 'Mark as completed'}">
+                    <i class="fas ${task.status === 'completed' ? 'fa-undo' : 'fa-check'}"></i>
+                </button>
+                <button onclick="editTask(${task.id})" class="btn-icon edit-task" title="Edit task">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button onclick="deleteTaskWithConfirmation(${task.id})" class="btn-icon delete-task" title="Delete task">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>
+    `).join('');
+
+    // Update empty state
+    if (filteredTasks.length === 0) {
+        taskList.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-tasks"></i>
+                <h3>No tasks found</h3>
+                <p>${searchTerm ? 'Try a different search term' : 'Add your first task to get started!'}</p>
+            </div>
+        `;
+    }
+}
+
+// Helper functions for enhanced task display
+function isOverdue(dueDate) {
+    return new Date(dueDate) < new Date().setHours(0, 0, 0, 0);
+}
+
+function formatDueDate(dueDate) {
+    const date = new Date(dueDate);
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    if (date.toDateString() === today.toDateString()) {
+        return 'Due Today';
+    } else if (date.toDateString() === tomorrow.toDateString()) {
+        return 'Due Tomorrow';
+    } else if (isOverdue(dueDate)) {
+        return `Overdue: ${formatDate(dueDate)}`;
+    }
+    return `Due: ${formatDate(dueDate)}`;
+}
+
+// Delete task with confirmation
+function deleteTaskWithConfirmation(taskId) {
+    const task = tasks.find(t => t.id === taskId);
+    if (!task) return;
+
+    const notification = document.createElement('div');
+    notification.className = 'notification warning';
+    notification.innerHTML = `
+        <div class="notification-content">
+            <p>Delete "${task.title}"?</p>
+            <div class="notification-actions">
+                <button onclick="confirmDeleteTask(${taskId})" class="btn-danger">Delete</button>
+                <button onclick="this.closest('.notification').remove()" class="btn-secondary">Cancel</button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(notification);
+    setTimeout(() => notification.classList.add('show'), 10);
+}
+
+function confirmDeleteTask(taskId) {
+    deleteTask(taskId);
+    showNotification('Task deleted successfully', 'success');
+    document.querySelector('.notification.warning')?.remove();
+}
+
+// Add these styles for new components
+const additionalStyles = document.createElement('style');
+additionalStyles.textContent = `
+    .empty-state {
+        text-align: center;
+        padding: 2rem;
+        color: var(--text-light);
+    }
+
+    .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: var(--border-color);
+    }
+
+    .notification.warning {
+        border-left-color: var(--warning-color);
+    }
+
+    .notification-content {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .notification-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-danger {
+        background-color: var(--danger-color);
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: var(--border-radius-sm);
+        cursor: pointer;
+    }
+
+    .overdue {
+        color: var(--danger-color);
+    }
+
+    .priority-indicator {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 5px;
+    }
+
+    .priority.high .priority-indicator {
+        background-color: var(--danger-color);
+    }
+
+    .priority.medium .priority-indicator {
+        background-color: var(--warning-color);
+    }
+
+    .priority.low .priority-indicator {
+        background-color: var(--success-color);
+    }
+`;
+
+document.head.appendChild(additionalStyles);
