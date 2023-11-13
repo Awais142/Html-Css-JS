@@ -596,3 +596,178 @@ additionalStyles.textContent = `
 `;
 
 document.head.appendChild(additionalStyles);
+// Task Editing
+let editingTaskId = null;
+
+// Add Edit Modal HTML
+const editModalHTML = `
+<div id="editTaskModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2><i class="fas fa-edit"></i> Edit Task</h2>
+            <button class="close-modal">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <form id="editTaskForm" class="modal-body">
+            <div class="form-group">
+                <label for="editTaskTitle">Task Title</label>
+                <input type="text" id="editTaskTitle" name="taskTitle" required
+                    placeholder="Enter task title">
+            </div>
+
+            <div class="form-group">
+                <label for="editTaskDescription">Description</label>
+                <textarea id="editTaskDescription" name="taskDescription" rows="3"
+                    placeholder="Enter task description"></textarea>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="editTaskPriority">Priority</label>
+                    <select id="editTaskPriority" name="taskPriority" required>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="editTaskDueDate">Due Date</label>
+                    <input type="date" id="editTaskDueDate" name="taskDueDate" required>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary cancel-modal">
+                    Cancel
+                </button>
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>`;
+
+// Add edit modal to DOM
+document.body.insertAdjacentHTML('beforeend', editModalHTML);
+
+// Get edit modal elements
+const editTaskModal = document.getElementById('editTaskModal');
+const editTaskForm = document.getElementById('editTaskForm');
+const closeEditModalBtn = editTaskModal.querySelector('.close-modal');
+const cancelEditModalBtn = editTaskModal.querySelector('.cancel-modal');
+
+// Edit Task Functions
+function editTask(taskId) {
+    const task = tasks.find(t => t.id === taskId);
+    if (!task) return;
+
+    editingTaskId = taskId;
+    
+    // Populate form fields
+    document.getElementById('editTaskTitle').value = task.title;
+    document.getElementById('editTaskDescription').value = task.description || '';
+    document.getElementById('editTaskPriority').value = task.priority;
+    document.getElementById('editTaskDueDate').value = task.dueDate;
+
+    // Show modal
+    editTaskModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    
+    // Focus on title
+    setTimeout(() => {
+        document.getElementById('editTaskTitle').focus();
+    }, 300);
+}
+
+function hideEditModal() {
+    editTaskModal.classList.remove('active');
+    document.body.style.overflow = '';
+    editTaskForm.reset();
+    editingTaskId = null;
+    clearValidation();
+}
+
+// Edit Modal Event Listeners
+closeEditModalBtn.addEventListener('click', hideEditModal);
+cancelEditModalBtn.addEventListener('click', hideEditModal);
+
+// Close edit modal when clicking outside
+window.addEventListener('click', (e) => {
+    if (e.target === editTaskModal) {
+        hideEditModal();
+    }
+});
+
+// Handle edit form submission
+editTaskForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    if (!validateEditForm()) {
+        return;
+    }
+
+    const formData = new FormData(editTaskForm);
+    const taskIndex = tasks.findIndex(t => t.id === editingTaskId);
+    
+    if (taskIndex !== -1) {
+        // Update task
+        tasks[taskIndex] = {
+            ...tasks[taskIndex],
+            title: formData.get('taskTitle').trim(),
+            description: formData.get('taskDescription').trim(),
+            priority: formData.get('taskPriority'),
+            dueDate: formData.get('taskDueDate'),
+            updatedAt: new Date().toISOString()
+        };
+
+        saveTasksToStorage();
+        updateTaskList();
+        hideEditModal();
+        showNotification('Task updated successfully!');
+    }
+});
+
+function validateEditForm() {
+    const title = document.getElementById('editTaskTitle').value.trim();
+    const dueDate = document.getElementById('editTaskDueDate').value;
+    const priority = document.getElementById('editTaskPriority').value;
+    
+    let isValid = true;
+    clearValidation();
+
+    if (title.length < 3) {
+        showError('editTaskTitle', 'Title must be at least 3 characters long');
+        isValid = false;
+    }
+
+    if (!dueDate) {
+        showError('editTaskDueDate', 'Please select a due date');
+        isValid = false;
+    }
+
+    if (!priority) {
+        showError('editTaskPriority', 'Please select a priority level');
+        isValid = false;
+    }
+
+    return isValid;
+}
+
+// Add styles for edit modal
+const editModalStyles = document.createElement('style');
+editModalStyles.textContent = `
+    #editTaskModal .modal-header i {
+        color: var(--warning-color);
+    }
+
+    .task-card.editing {
+        border: 2px solid var(--primary-color);
+        box-shadow: 0 0 10px rgba(74, 144, 226, 0.2);
+    }
+`;
+
+document.head.appendChild(editModalStyles);
