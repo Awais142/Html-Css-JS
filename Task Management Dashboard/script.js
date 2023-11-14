@@ -771,3 +771,170 @@ editModalStyles.textContent = `
 `;
 
 document.head.appendChild(editModalStyles);
+// Task Sorting and Filtering Enhancement
+let sortOptions = {
+    criteria: 'dueDate',
+    direction: 'asc'
+};
+
+// Add sort controls HTML
+const sortControlsHTML = `
+<div class="task-controls">
+    <div class="task-filters">
+        <button class="active" data-filter="all">All</button>
+        <button data-filter="in progress">In Progress</button>
+        <button data-filter="completed">Completed</button>
+    </div>
+    <div class="sort-controls">
+        <select id="sortCriteria">
+            <option value="dueDate">Due Date</option>
+            <option value="priority">Priority</option>
+            <option value="title">Title</option>
+            <option value="status">Status</option>
+        </select>
+        <button id="sortDirection" class="btn-icon">
+            <i class="fas fa-sort-amount-down"></i>
+        </button>
+    </div>
+</div>`;
+
+// Insert sort controls before task list
+const taskSection = document.querySelector('.task-section');
+const taskList = document.querySelector('.task-list');
+taskSection.insertBefore(
+    document.createRange().createContextualFragment(sortControlsHTML),
+    taskList
+);
+
+// Get sort control elements
+const sortCriteriaSelect = document.getElementById('sortCriteria');
+const sortDirectionBtn = document.getElementById('sortDirection');
+const taskFilters = document.querySelectorAll('.task-filters button');
+
+// Sort and Filter Event Listeners
+sortCriteriaSelect.addEventListener('change', (e) => {
+    sortOptions.criteria = e.target.value;
+    updateTaskList();
+});
+
+sortDirectionBtn.addEventListener('click', () => {
+    sortOptions.direction = sortOptions.direction === 'asc' ? 'desc' : 'asc';
+    sortDirectionBtn.querySelector('i').className = 
+        `fas fa-sort-amount-${sortOptions.direction === 'asc' ? 'down' : 'up'}`;
+    updateTaskList();
+});
+
+// Enhanced updateTaskList function
+function updateTaskList(searchTerm = '') {
+    let filteredTasks = [...tasks];
+
+    // Apply search filter
+    if (searchTerm) {
+        const searchTermLower = searchTerm.toLowerCase();
+        filteredTasks = filteredTasks.filter(task => 
+            task.title.toLowerCase().includes(searchTermLower) ||
+            task.description.toLowerCase().includes(searchTermLower)
+        );
+    }
+
+    // Apply status filter
+    if (currentFilter !== 'all') {
+        filteredTasks = filteredTasks.filter(task => {
+            if (currentFilter === 'in progress') return task.status === 'pending';
+            return task.status === currentFilter;
+        });
+    }
+
+    // Enhanced sorting
+    filteredTasks.sort((a, b) => {
+        let compareResult = 0;
+        
+        switch (sortOptions.criteria) {
+            case 'dueDate':
+                compareResult = new Date(a.dueDate) - new Date(b.dueDate);
+                break;
+            case 'priority': {
+                const priorityOrder = { high: 0, medium: 1, low: 2 };
+                compareResult = priorityOrder[a.priority] - priorityOrder[b.priority];
+                break;
+            }
+            case 'title':
+                compareResult = a.title.localeCompare(b.title);
+                break;
+            case 'status': {
+                const statusOrder = { pending: 0, completed: 1 };
+                compareResult = statusOrder[a.status] - statusOrder[b.status];
+                break;
+            }
+        }
+        
+        return sortOptions.direction === 'asc' ? compareResult : -compareResult;
+    });
+
+    // Update task counter with filter info
+    const taskCounter = document.querySelector('.task-counter') || 
+        document.createElement('div');
+    taskCounter.className = 'task-counter';
+    taskCounter.textContent = getTaskCounterText(filteredTasks.length, currentFilter);
+    if (!taskCounter.parentElement) {
+        taskSection.insertBefore(taskCounter, taskSection.firstChild);
+    }
+
+    // Render tasks
+    renderTaskList(filteredTasks);
+}
+
+function getTaskCounterText(count, filter) {
+    const filterText = filter === 'all' ? '' : ` ${filter}`;
+    return `${count} ${count === 1 ? 'task' : 'tasks'}${filterText}`;
+}
+
+// Add styles for sort controls
+const sortControlStyles = document.createElement('style');
+sortControlStyles.textContent = `
+    .task-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--spacing-md);
+        flex-wrap: wrap;
+        gap: var(--spacing-md);
+    }
+
+    .sort-controls {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+    }
+
+    #sortCriteria {
+        padding: 8px;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius-sm);
+        background-color: var(--white);
+        color: var(--text-color);
+    }
+
+    .task-counter {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: var(--spacing-sm);
+    }
+
+    @media (max-width: 768px) {
+        .task-controls {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .sort-controls {
+            justify-content: flex-end;
+        }
+    }
+`;
+
+document.head.appendChild(sortControlStyles);
+
+// Initialize sorting
+sortCriteriaSelect.value = sortOptions.criteria;
+updateTaskList();
