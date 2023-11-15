@@ -938,3 +938,219 @@ document.head.appendChild(sortControlStyles);
 // Initialize sorting
 sortCriteriaSelect.value = sortOptions.criteria;
 updateTaskList();
+// Task Statistics and Visualization
+function getTaskStatistics() {
+    const stats = {
+        total: tasks.length,
+        completed: tasks.filter(t => t.status === 'completed').length,
+        pending: tasks.filter(t => t.status === 'pending').length,
+        overdue: tasks.filter(t => t.status === 'pending' && isOverdue(t.dueDate)).length,
+        priorities: {
+            high: tasks.filter(t => t.priority === 'high').length,
+            medium: tasks.filter(t => t.priority === 'medium').length,
+            low: tasks.filter(t => t.priority === 'low').length
+        },
+        dueToday: tasks.filter(t => formatDueDate(t.dueDate) === 'Due Today').length,
+        dueTomorrow: tasks.filter(t => formatDueDate(t.dueDate) === 'Due Tomorrow').length
+    };
+
+    stats.completion = stats.total ? Math.round((stats.completed / stats.total) * 100) : 0;
+    return stats;
+}
+
+// Enhanced updateStats function with visualizations
+function updateStats() {
+    const stats = getTaskStatistics();
+    
+    const quickStats = document.querySelector('.quick-stats');
+    quickStats.innerHTML = `
+        <div class="stat-card total">
+            <div class="stat-icon">
+                <i class="fas fa-tasks"></i>
+            </div>
+            <div class="stat-details">
+                <h3>Total Tasks</h3>
+                <div class="stat-value">
+                    <p>${stats.total}</p>
+                    <div class="completion-ring" data-percentage="${stats.completion}">
+                        <svg viewBox="0 0 36 36">
+                            <path d="M18 2.0845
+                                a 15.9155 15.9155 0 0 1 0 31.831
+                                a 15.9155 15.9155 0 0 1 0 -31.831"
+                                fill="none"
+                                stroke="var(--border-color)"
+                                stroke-width="2"
+                            />
+                            <path d="M18 2.0845
+                                a 15.9155 15.9155 0 0 1 0 31.831
+                                a 15.9155 15.9155 0 0 1 0 -31.831"
+                                fill="none"
+                                stroke="var(--primary-color)"
+                                stroke-width="2"
+                                stroke-dasharray="${stats.completion}, 100"
+                            />
+                        </svg>
+                        <span>${stats.completion}%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="stat-card pending">
+            <div class="stat-icon">
+                <i class="fas fa-spinner"></i>
+            </div>
+            <div class="stat-details">
+                <h3>In Progress</h3>
+                <div class="stat-value">
+                    <p>${stats.pending}</p>
+                    <div class="priority-bars">
+                        <div class="priority-bar high" style="width: ${(stats.priorities.high / stats.total) * 100}%"></div>
+                        <div class="priority-bar medium" style="width: ${(stats.priorities.medium / stats.total) * 100}%"></div>
+                        <div class="priority-bar low" style="width: ${(stats.priorities.low / stats.total) * 100}%"></div>
+                    </div>
+                </div>
+                <div class="priority-legend">
+                    <span class="high">H</span>
+                    <span class="medium">M</span>
+                    <span class="low">L</span>
+                </div>
+            </div>
+        </div>
+        <div class="stat-card upcoming">
+            <div class="stat-icon">
+                <i class="fas fa-calendar-day"></i>
+            </div>
+            <div class="stat-details">
+                <h3>Upcoming</h3>
+                <div class="stat-value">
+                    <div class="upcoming-tasks">
+                        <div class="upcoming-item">
+                            <span>Today</span>
+                            <strong>${stats.dueToday}</strong>
+                        </div>
+                        <div class="upcoming-item">
+                            <span>Tomorrow</span>
+                            <strong>${stats.dueTomorrow}</strong>
+                        </div>
+                        <div class="upcoming-item overdue">
+                            <span>Overdue</span>
+                            <strong>${stats.overdue}</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Initialize completion rings animation
+    initializeCompletionRings();
+}
+
+// Completion ring animation
+function initializeCompletionRings() {
+    document.querySelectorAll('.completion-ring').forEach(ring => {
+        const percentage = ring.dataset.percentage;
+        const path = ring.querySelector('path:last-child');
+        path.style.strokeDasharray = '0, 100';
+        
+        setTimeout(() => {
+            path.style.strokeDasharray = `${percentage}, 100`;
+            path.style.transition = 'stroke-dasharray 1s ease';
+        }, 100);
+    });
+}
+
+// Add styles for statistics and visualizations
+const statsStyles = document.createElement('style');
+statsStyles.textContent = `
+    .stat-value {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .completion-ring {
+        width: 40px;
+        height: 40px;
+        position: relative;
+    }
+
+    .completion-ring svg {
+        transform: rotate(-90deg);
+    }
+
+    .completion-ring span {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .priority-bars {
+        height: 4px;
+        display: flex;
+        margin-top: 8px;
+        border-radius: var(--border-radius-sm);
+        overflow: hidden;
+    }
+
+    .priority-bar {
+        height: 100%;
+        transition: width 0.3s ease;
+    }
+
+    .priority-bar.high { background-color: var(--danger-color); }
+    .priority-bar.medium { background-color: var(--warning-color); }
+    .priority-bar.low { background-color: var(--success-color); }
+
+    .priority-legend {
+        display: flex;
+        gap: 8px;
+        margin-top: 4px;
+        font-size: 0.75rem;
+    }
+
+    .priority-legend span {
+        padding: 2px 4px;
+        border-radius: var(--border-radius-sm);
+        color: var(--white);
+    }
+
+    .priority-legend .high { background-color: var(--danger-color); }
+    .priority-legend .medium { background-color: var(--warning-color); }
+    .priority-legend .low { background-color: var(--success-color); }
+
+    .upcoming-tasks {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        width: 100%;
+    }
+
+    .upcoming-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 4px 0;
+    }
+
+    .upcoming-item.overdue {
+        color: var(--danger-color);
+    }
+
+    .upcoming-item span {
+        font-size: 0.85rem;
+    }
+
+    .upcoming-item strong {
+        font-size: 1rem;
+    }
+`;
+
+document.head.appendChild(statsStyles);
+
+// Update stats on initial load and after task changes
+updateStats();
