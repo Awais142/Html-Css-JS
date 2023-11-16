@@ -1154,3 +1154,221 @@ document.head.appendChild(statsStyles);
 
 // Update stats on initial load and after task changes
 updateStats();
+// Task Categories and Grouping
+const defaultCategories = [
+    { id: 'work', name: 'Work', color: '#4a90e2', icon: 'fa-briefcase' },
+    { id: 'personal', name: 'Personal', color: '#50c878', icon: 'fa-user' },
+    { id: 'shopping', name: 'Shopping', color: '#f4a261', icon: 'fa-shopping-cart' },
+    { id: 'health', name: 'Health', color: '#e63946', icon: 'fa-heart' },
+    { id: 'education', name: 'Education', color: '#9b5de5', icon: 'fa-graduation-cap' }
+];
+
+// Add category field to task form
+const categoryFormGroup = document.createElement('div');
+categoryFormGroup.className = 'form-group';
+categoryFormGroup.innerHTML = `
+    <label for="taskCategory">Category</label>
+    <div class="category-select">
+        <select id="taskCategory" name="taskCategory" required>
+            <option value="">Select a category</option>
+            ${defaultCategories.map(category => `
+                <option value="${category.id}" data-color="${category.color}" data-icon="${category.icon}">
+                    ${category.name}
+                </option>
+            `).join('')}
+        </select>
+        <button type="button" class="btn-icon add-category" title="Add new category">
+            <i class="fas fa-plus"></i>
+        </button>
+    </div>
+`;
+
+// Insert category field into form
+const taskPriorityGroup = document.querySelector('#taskPriority').closest('.form-group');
+taskPriorityGroup.parentNode.insertBefore(categoryFormGroup, taskPriorityGroup);
+
+// Add category field to edit form
+const editCategoryFormGroup = categoryFormGroup.cloneNode(true);
+editCategoryFormGroup.querySelector('select').id = 'editTaskCategory';
+const editTaskPriorityGroup = document.querySelector('#editTaskPriority').closest('.form-group');
+editTaskPriorityGroup.parentNode.insertBefore(editCategoryFormGroup, editTaskPriorityGroup);
+
+// Update task creation and editing
+function createTask(formData) {
+    const task = {
+        id: Date.now(),
+        title: formData.get('taskTitle').trim(),
+        description: formData.get('taskDescription').trim(),
+        priority: formData.get('taskPriority'),
+        category: formData.get('taskCategory'),
+        dueDate: formData.get('taskDueDate'),
+        status: 'pending',
+        createdAt: new Date().toISOString()
+    };
+
+    tasks.push(task);
+    saveTasksToStorage();
+    updateTaskList();
+    updateStats();
+    return task;
+}
+
+// Group tasks by category
+function groupTasksByCategory(tasks) {
+    const grouped = {};
+    defaultCategories.forEach(category => {
+        grouped[category.id] = {
+            ...category,
+            tasks: []
+        };
+    });
+
+    tasks.forEach(task => {
+        if (grouped[task.category]) {
+            grouped[task.category].tasks.push(task);
+        }
+    });
+
+    return grouped;
+}
+
+// Enhanced task list rendering with categories
+function renderTaskList(filteredTasks) {
+    const groupedTasks = groupTasksByCategory(filteredTasks);
+    
+    taskList.innerHTML = Object.values(groupedTasks)
+        .filter(group => group.tasks.length > 0)
+        .map(group => `
+            <div class="category-group" style="--category-color: ${group.color}">
+                <div class="category-header">
+                    <i class="fas ${group.icon}"></i>
+                    <h3>${group.name}</h3>
+                    <span class="task-count">${group.tasks.length}</span>
+                </div>
+                <div class="category-tasks">
+                    ${group.tasks.map((task, index) => `
+                        <div class="task-card ${task.status}" 
+                            data-id="${task.id}"
+                            draggable="true"
+                            data-position="${index}"
+                            data-category="${task.category}">
+                            <div class="drag-handle">
+                                <i class="fas fa-grip-vertical"></i>
+                            </div>
+                            <div class="task-priority ${task.priority}">
+                                <span class="priority-indicator"></span>
+                                ${task.priority}
+                            </div>
+                            <div class="task-content">
+                                <h3>${task.title}</h3>
+                                <p>${task.description || 'No description provided'}</p>
+                                <div class="task-meta">
+                                    <span class="due-date ${isOverdue(task.dueDate) ? 'overdue' : ''}">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        ${formatDueDate(task.dueDate)}
+                                    </span>
+                                    <span class="status ${task.status}">
+                                        <i class="fas ${task.status === 'completed' ? 'fa-check-circle' : 'fa-clock'}"></i>
+                                        ${task.status}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="task-actions">
+                                <button onclick="toggleTaskStatus(${task.id})" class="btn-icon">
+                                    <i class="fas ${task.status === 'completed' ? 'fa-undo' : 'fa-check'}"></i>
+                                </button>
+                                <button onclick="editTask(${task.id})" class="btn-icon edit-task">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button onclick="deleteTaskWithConfirmation(${task.id})" class="btn-icon delete-task">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `).join('') || `
+            <div class="empty-state">
+                <i class="fas fa-tasks"></i>
+                <h3>No tasks found</h3>
+                <p>Add your first task to get started!</p>
+            </div>
+        `;
+
+    initializeDragAndDrop();
+}
+
+// Add styles for categories
+const categoryStyles = document.createElement('style');
+categoryStyles.textContent = `
+    .category-select {
+        display: flex;
+        gap: var(--spacing-sm);
+    }
+
+    .category-group {
+        margin-bottom: var(--spacing-lg);
+        border-radius: var(--border-radius-lg);
+        background: var(--white);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .category-header {
+        display: flex;
+        align-items: center;
+        padding: var(--spacing-md);
+        background: var(--category-color);
+        color: white;
+        border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+        gap: var(--spacing-sm);
+    }
+
+    .category-header i {
+        font-size: 1.2rem;
+    }
+
+    .category-header h3 {
+        margin: 0;
+        flex: 1;
+    }
+
+    .task-count {
+        background: rgba(255,255,255,0.2);
+        padding: 2px 8px;
+        border-radius: var(--border-radius-sm);
+        font-size: 0.85rem;
+    }
+
+    .category-tasks {
+        padding: var(--spacing-md);
+    }
+
+    .task-card {
+        border-left: 4px solid var(--category-color);
+    }
+
+    @media (max-width: 768px) {
+        .category-group {
+            margin-bottom: var(--spacing-md);
+        }
+    }
+`;
+
+document.head.appendChild(categoryStyles);
+
+// Update stats to include category information
+function getTaskStatistics() {
+    const stats = {
+        // ... existing stats ...
+        categories: Object.values(groupTasksByCategory(tasks))
+            .map(group => ({
+                name: group.name,
+                count: group.tasks.length,
+                completed: group.tasks.filter(t => t.status === 'completed').length
+            }))
+            .filter(cat => cat.count > 0)
+    };
+
+    return stats;
+}
