@@ -1,11 +1,24 @@
 // Task Management Dashboard - Core Functionality
 
+// Default Categories
+const defaultCategories = [
+    { id: 'Work', name: 'Work', color: '#4a90e2' },
+    { id: 'Personal', name: 'Personal', color: '#27ae60' },
+    { id: 'Shopping', name: 'Shopping', color: '#f39c12' },
+    { id: 'Health', name: 'Health', color: '#e74c3c' },
+    { id: 'Education', name: 'Education', color: '#9b59b6' },
+    { id: 'Meetings', name: 'Meetings', color: '#34495e' },
+    { id: 'Documentation', name: 'Documentation', color: '#95a5a6' }
+];
+
 // DOM Elements
 const addTaskBtn = document.getElementById('addTaskBtn');
 const addTaskModal = document.getElementById('addTaskModal');
-const closeModalBtn = document.querySelector('.close-modal');
-const cancelModalBtn = document.querySelector('.cancel-modal');
+const editTaskModal = document.getElementById('editTaskModal');
+const closeModalBtns = document.querySelectorAll('.close-modal');
+const cancelModalBtns = document.querySelectorAll('.cancel-modal');
 const addTaskForm = document.getElementById('addTaskForm');
+const editTaskForm = document.getElementById('editTaskForm');
 const taskList = document.querySelector('.task-list');
 const searchInput = document.querySelector('.search-bar input');
 const taskFilters = document.querySelectorAll('.task-filters button');
@@ -15,49 +28,136 @@ let tasks = [];
 let currentFilter = 'all';
 
 // Event Listeners
-document.addEventListener('DOMContentLoaded', () => {
-    // Initialize the dashboard
+function initializeApp() {
     loadTasksFromStorage();
     updateTaskList();
     updateStats();
-});
+    initializeKeyboardShortcuts();
+    initializeServiceWorker();
+}
+
+function initializeServiceWorker() {
+    if ('serviceWorker' in navigator) {
+        const swPath = window.location.pathname.includes('index.html') 
+            ? 'sw.js' 
+            : window.location.pathname + 'sw.js';
+            
+        navigator.serviceWorker.register(swPath)
+            .then(registration => {
+                console.log('ServiceWorker registration successful');
+            })
+            .catch(error => {
+                console.error('ServiceWorker registration failed:', error);
+            });
+    }
+}
+
+function withStorageErrorHandling(operation) {
+    try {
+        return operation();
+    } catch (error) {
+        console.error('Storage operation failed:', error);
+        if (error.name === 'QuotaExceededError') {
+            showNotification('Storage quota exceeded. Please clear some tasks.', 'error');
+        } else {
+            showNotification('Failed to save changes. Please try again.', 'error');
+        }
+        return null;
+    }
+}
+
+function initializeDragAndDrop() {
+    const taskCards = document.querySelectorAll('.task-card');
+
+    taskCards.forEach(card => {
+        card.addEventListener('dragstart', handleDragStart);
+        card.addEventListener('dragend', handleDragEnd);
+        card.addEventListener('dragover', handleDragOver);
+        card.addEventListener('drop', handleDrop);
+        card.addEventListener('dragenter', handleDragEnter);
+        card.addEventListener('dragleave', handleDragLeave);
+        
+        // Touch event support
+        card.addEventListener('touchstart', handleTouchStart);
+        card.addEventListener('touchmove', handleTouchMove);
+        card.addEventListener('touchend', handleTouchEnd);
+    });
+}
+
+function handleTouchStart(e) {
+    if (e.cancelable) e.preventDefault();
+    this.classList.add('dragging');
+    draggedTask = this;
+}
+
+function handleTouchMove(e) {
+    if (e.cancelable) e.preventDefault();
+    const touch = e.touches[0];
+    const target = document.elementFromPoint(touch.clientX, touch.clientY);
+    const taskCard = target?.closest('.task-card');
+    
+    if (taskCard && taskCard !== draggedTask) {
+        const rect = taskCard.getBoundingClientRect();
+        const midPoint = rect.top + rect.height / 2;
+        
+        if (touch.clientY < midPoint) {
+            taskCard.classList.add('drop-before');
+            taskCard.classList.remove('drop-after');
+        } else {
+            taskCard.classList.add('drop-after');
+            taskCard.classList.remove('drop-before');
+        }
+    }
+}
+
+function handleTouchEnd(e) {
+    if (e.cancelable) e.preventDefault();
+    const touch = e.changedTouches[0];
+    const target = document.elementFromPoint(touch.clientX, touch.clientY);
+    const taskCard = target?.closest('.task-card');
+    
+    if (taskCard && taskCard !== draggedTask) {
+        handleDrop.call(taskCard, e);
+    }
+    
+    draggedTask.classList.remove('dragging');
+    clearDropTargets();
+}
+
+document.addEventListener('DOMContentLoaded', initializeApp);
 
 // Modal Event Listeners
-addTaskBtn.addEventListener('click', () => {
-    addTaskModal.classList.add('active');
-});
-
-closeModalBtn.addEventListener('click', closeModal);
-cancelModalBtn.addEventListener('click', closeModal);
+addTaskBtn.addEventListener('click', showModal);
+closeModalBtns.forEach(button => button.addEventListener('click', hideModal));
+cancelModalBtns.forEach(button => button.addEventListener('click', hideModal));
 
 // Close modal when clicking outside
 window.addEventListener('click', (e) => {
-    if (e.target === addTaskModal) {
-        closeModal();
+    if (e.target === addTaskModal || e.target === editTaskModal) {
+        hideModal();
     }
 });
 
 // Form Submission
 addTaskForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const formData = new FormData(addTaskForm);
     
-    const task = {
-        id: Date.now(),
-        title: formData.get('taskTitle'),
-        description: formData.get('taskDescription'),
+    if (!validateForm()) {
+        return;
+    }
+
+    const formData = new FormData(addTaskForm);
+    const taskData = {
+        title: formData.get('taskTitle').trim(),
+        description: formData.get('taskDescription').trim(),
         priority: formData.get('taskPriority'),
-        dueDate: formData.get('taskDueDate'),
-        status: 'pending',
-        createdAt: new Date().toISOString()
+        category: formData.get('taskCategory'),
+        dueDate: formData.get('taskDueDate')
     };
 
-    tasks.push(task);
-    saveTasksToStorage();
-    updateTaskList();
-    updateStats();
-    closeModal();
-    addTaskForm.reset();
+    withStorageErrorHandling(() => createTask(formData));
+    hideModal();
+    showNotification('Task added successfully!');
 });
 
 // Search Functionality
@@ -77,36 +177,134 @@ taskFilters.forEach(button => {
 });
 
 // Utility Functions
-function closeModal() {
-    addTaskModal.classList.remove('active');
-    addTaskForm.reset();
+function showModal() {
+    addTaskModal.classList.add('active');
+    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    
+    // Set minimum date to today for the due date input
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('taskDueDate').min = today;
+    
+    // Focus on the title input
+    setTimeout(() => {
+        document.getElementById('taskTitle').focus();
+    }, 300);
 }
 
-function formatDate(dateString) {
-    const options = { year: 'numeric', month: 'short', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString(undefined, options);
+function hideModal() {
+    addTaskModal.classList.remove('active');
+    editTaskModal.classList.remove('active');
+    document.body.style.overflow = ''; // Restore scrolling
+    addTaskForm.reset();
+    editTaskForm.reset();
+    clearValidation();
+}
+
+function validateForm() {
+    const title = document.getElementById('taskTitle').value.trim();
+    const dueDate = document.getElementById('taskDueDate').value;
+    const priority = document.getElementById('taskPriority').value;
+    const category = document.getElementById('taskCategory').value;
+    
+    let isValid = true;
+    clearValidation();
+
+    if (title.length < 3) {
+        showError('taskTitle', 'Title must be at least 3 characters long');
+        isValid = false;
+    }
+
+    if (!dueDate) {
+        showError('taskDueDate', 'Please select a due date');
+        isValid = false;
+    }
+
+    if (!priority) {
+        showError('taskPriority', 'Please select a priority level');
+        isValid = false;
+    }
+
+    if (!category) {
+        showError('taskCategory', 'Please select a category');
+        isValid = false;
+    }
+
+    return isValid;
+}
+
+function showError(fieldId, message) {
+    const field = document.getElementById(fieldId);
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'error-message';
+    errorDiv.textContent = message;
+    field.classList.add('error');
+    field.parentNode.appendChild(errorDiv);
+}
+
+function clearValidation() {
+    // Remove all error messages
+    document.querySelectorAll('.error-message').forEach(el => el.remove());
+    document.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
 }
 
 // Local Storage Functions
 function saveTasksToStorage() {
-    localStorage.setItem('tasks', JSON.stringify(tasks));
+    withStorageErrorHandling(() => localStorage.setItem('tasks', JSON.stringify(tasks)));
 }
 
 function loadTasksFromStorage() {
-    const storedTasks = localStorage.getItem('tasks');
+    const storedTasks = withStorageErrorHandling(() => localStorage.getItem('tasks'));
     if (storedTasks) {
         tasks = JSON.parse(storedTasks);
+    } else {
+        // Initialize with sample tasks if no tasks exist
+        tasks = [
+            {
+                id: Date.now(),
+                title: "Complete Project Proposal",
+                description: "Draft and finalize the project proposal for the client meeting",
+                priority: "high",
+                category: "Work",
+                dueDate: "2024-02-15",
+                status: "pending",
+                createdAt: new Date().toISOString()
+            },
+            {
+                id: Date.now() + 1,
+                title: "Schedule Team Meeting",
+                description: "Set up weekly team sync meeting",
+                priority: "medium",
+                category: "Meetings",
+                dueDate: "2024-02-10",
+                status: "completed",
+                createdAt: new Date().toISOString()
+            },
+            {
+                id: Date.now() + 2,
+                title: "Update Documentation",
+                description: "Review and update project documentation",
+                priority: "low",
+                category: "Documentation",
+                dueDate: "2024-02-20",
+                status: "pending",
+                createdAt: new Date().toISOString()
+            }
+        ];
+        saveTasksToStorage();
     }
+    updateTaskList();
+    updateStats();
 }
 
 // Task Management Functions
-function addTask(taskData) {
+function createTask(formData) {
     const task = {
         id: Date.now(),
-        title: taskData.title,
-        description: taskData.description,
-        priority: taskData.priority,
-        dueDate: taskData.dueDate,
+        title: formData.get('taskTitle').trim(),
+        description: formData.get('taskDescription').trim(),
+        priority: formData.get('taskPriority'),
+        category: formData.get('taskCategory'),
+        dueDate: formData.get('taskDueDate'),
         status: 'pending',
         createdAt: new Date().toISOString()
     };
@@ -143,9 +341,10 @@ function updateTaskList(searchTerm = '') {
 
     // Apply search filter
     if (searchTerm) {
+        const searchTermLower = searchTerm.toLowerCase();
         filteredTasks = filteredTasks.filter(task => 
-            task.title.toLowerCase().includes(searchTerm) ||
-            task.description.toLowerCase().includes(searchTerm)
+            task.title.toLowerCase().includes(searchTermLower) ||
+            task.description.toLowerCase().includes(searchTermLower)
         );
     }
 
@@ -161,32 +360,49 @@ function updateTaskList(searchTerm = '') {
     filteredTasks.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
 
     // Update DOM
-    taskList.innerHTML = filteredTasks.map(task => `
-        <div class="task-card" data-id="${task.id}">
-            <div class="task-priority ${task.priority}"></div>
+    renderTaskList(filteredTasks);
+}
+
+function renderTaskList(filteredTasks) {
+    const taskListElement = document.querySelector('.task-list');
+    
+    if (!filteredTasks.length) {
+        taskListElement.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-tasks"></i>
+                <p>No tasks found</p>
+            </div>
+        `;
+        return;
+    }
+
+    taskListElement.innerHTML = filteredTasks.map(task => `
+        <div class="task-card ${task.status}" data-id="${task.id}">
+            <div class="priority-indicator ${task.priority}"></div>
             <div class="task-content">
-                <h3>${task.title}</h3>
-                <p>${task.description}</p>
+                <h3 class="task-title">${task.title}</h3>
+                <p class="task-description">${task.description}</p>
                 <div class="task-meta">
-                    <span class="due-date">
-                        <i class="fas fa-calendar-alt"></i>
-                        Due: ${formatDate(task.dueDate)}
-                    </span>
-                    <span class="status ${task.status}">
-                        ${task.status}
-                    </span>
+                    <span><i class="fas fa-tag"></i> ${task.category}</span>
+                    <span><i class="fas fa-calendar"></i> ${formatDueDate(task.dueDate)}</span>
                 </div>
             </div>
             <div class="task-actions">
-                <button onclick="toggleTaskStatus(${task.id})" class="btn-icon">
-                    <i class="fas ${task.status === 'completed' ? 'fa-undo' : 'fa-check'}"></i>
+                <button onclick="toggleTaskStatus(${task.id})" title="${task.status === 'completed' ? 'Mark as Pending' : 'Mark as Completed'}">
+                    <i class="fas fa-${task.status === 'completed' ? 'undo' : 'check'}"></i>
                 </button>
-                <button onclick="deleteTask(${task.id})" class="btn-icon delete-task">
+                <button onclick="editTask(${task.id})" title="Edit Task">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button onclick="deleteTaskWithConfirmation(${task.id})" title="Delete Task">
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
         </div>
     `).join('');
+
+    // Initialize drag and drop after rendering
+    initializeDragAndDrop();
 }
 
 function updateStats() {
@@ -224,96 +440,12 @@ function updateStats() {
         </div>
     `;
 }
+
 // Modal Animation and Validation Functions
-function showModal() {
-    addTaskModal.classList.add('active');
-    document.body.style.overflow = 'hidden'; // Prevent background scrolling
-    
-    // Set minimum date to today for the due date input
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('taskDueDate').min = today;
-    
-    // Focus on the title input
-    setTimeout(() => {
-        document.getElementById('taskTitle').focus();
-    }, 300);
+function formatDate(dateString) {
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
 }
-
-function hideModal() {
-    addTaskModal.classList.remove('active');
-    document.body.style.overflow = ''; // Restore scrolling
-    addTaskForm.reset();
-    clearValidation();
-}
-
-function validateForm() {
-    const title = document.getElementById('taskTitle').value.trim();
-    const dueDate = document.getElementById('taskDueDate').value;
-    const priority = document.getElementById('taskPriority').value;
-    
-    let isValid = true;
-    clearValidation();
-
-    if (title.length < 3) {
-        showError('taskTitle', 'Title must be at least 3 characters long');
-        isValid = false;
-    }
-
-    if (!dueDate) {
-        showError('taskDueDate', 'Please select a due date');
-        isValid = false;
-    }
-
-    if (!priority) {
-        showError('taskPriority', 'Please select a priority level');
-        isValid = false;
-    }
-
-    return isValid;
-}
-
-function showError(fieldId, message) {
-    const field = document.getElementById(fieldId);
-    const errorDiv = document.createElement('div');
-    errorDiv.className = 'error-message';
-    errorDiv.textContent = message;
-    field.classList.add('error');
-    field.parentNode.appendChild(errorDiv);
-}
-
-function clearValidation() {
-    // Remove all error messages
-    document.querySelectorAll('.error-message').forEach(el => el.remove());
-    document.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
-}
-
-// Update existing event listeners
-addTaskBtn.addEventListener('click', showModal);
-closeModalBtn.addEventListener('click', hideModal);
-cancelModalBtn.addEventListener('click', hideModal);
-
-// Update form submission
-addTaskForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    
-    if (!validateForm()) {
-        return;
-    }
-
-    const formData = new FormData(addTaskForm);
-    const taskData = {
-        title: formData.get('taskTitle').trim(),
-        description: formData.get('taskDescription').trim(),
-        priority: formData.get('taskPriority'),
-        dueDate: formData.get('taskDueDate')
-    };
-
-    addTask(taskData);
-    hideModal();
-
-    // Show success notification
-    showNotification('Task added successfully!');
-});
 
 // Notification System
 function showNotification(message, type = 'success') {
@@ -382,400 +514,10 @@ style.textContent = `
 `;
 
 document.head.appendChild(style);
-// Task Filtering and Sorting
+
+// Task Filtering and Sorting Enhancement
 let sortCriteria = 'dueDate'; // Default sort
 let sortDirection = 'asc'; // Default direction
-
-// Enhanced updateTaskList function with sorting
-function updateTaskList(searchTerm = '') {
-    let filteredTasks = [...tasks];
-
-    // Apply search filter
-    if (searchTerm) {
-        const searchTermLower = searchTerm.toLowerCase();
-        filteredTasks = filteredTasks.filter(task => 
-            task.title.toLowerCase().includes(searchTermLower) ||
-            task.description.toLowerCase().includes(searchTermLower)
-        );
-    }
-
-    // Apply status filter
-    if (currentFilter !== 'all') {
-        filteredTasks = filteredTasks.filter(task => {
-            if (currentFilter === 'in progress') return task.status === 'pending';
-            return task.status === currentFilter;
-        });
-    }
-
-    // Apply sorting
-    filteredTasks.sort((a, b) => {
-        let compareResult = 0;
-        
-        switch (sortCriteria) {
-            case 'dueDate':
-                compareResult = new Date(a.dueDate) - new Date(b.dueDate);
-                break;
-            case 'priority':
-                const priorityOrder = { high: 0, medium: 1, low: 2 };
-                compareResult = priorityOrder[a.priority] - priorityOrder[b.priority];
-                break;
-            case 'title':
-                compareResult = a.title.localeCompare(b.title);
-                break;
-            case 'status':
-                compareResult = a.status.localeCompare(b.status);
-                break;
-        }
-        
-        return sortDirection === 'asc' ? compareResult : -compareResult;
-    });
-
-    // Update task counter
-    const taskCounter = document.querySelector('.task-counter');
-    if (taskCounter) {
-        taskCounter.textContent = `${filteredTasks.length} ${filteredTasks.length === 1 ? 'task' : 'tasks'}`;
-    }
-
-    // Update DOM with enhanced task cards
-    taskList.innerHTML = filteredTasks.map(task => `
-        <div class="task-card ${task.status}" data-id="${task.id}">
-            <div class="task-priority ${task.priority}">
-                <span class="priority-indicator"></span>
-                ${task.priority}
-            </div>
-            <div class="task-content">
-                <h3>${task.title}</h3>
-                <p>${task.description || 'No description provided'}</p>
-                <div class="task-meta">
-                    <span class="due-date ${isOverdue(task.dueDate) ? 'overdue' : ''}">
-                        <i class="fas fa-calendar-alt"></i>
-                        ${formatDueDate(task.dueDate)}
-                    </span>
-                    <span class="status ${task.status}">
-                        <i class="fas ${task.status === 'completed' ? 'fa-check-circle' : 'fa-clock'}"></i>
-                        ${task.status}
-                    </span>
-                </div>
-            </div>
-            <div class="task-actions">
-                <button onclick="toggleTaskStatus(${task.id})" class="btn-icon" title="${task.status === 'completed' ? 'Mark as pending' : 'Mark as completed'}">
-                    <i class="fas ${task.status === 'completed' ? 'fa-undo' : 'fa-check'}"></i>
-                </button>
-                <button onclick="editTask(${task.id})" class="btn-icon edit-task" title="Edit task">
-                    <i class="fas fa-edit"></i>
-                </button>
-                <button onclick="deleteTaskWithConfirmation(${task.id})" class="btn-icon delete-task" title="Delete task">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </div>
-        </div>
-    `).join('');
-
-    // Update empty state
-    if (filteredTasks.length === 0) {
-        taskList.innerHTML = `
-            <div class="empty-state">
-                <i class="fas fa-tasks"></i>
-                <h3>No tasks found</h3>
-                <p>${searchTerm ? 'Try a different search term' : 'Add your first task to get started!'}</p>
-            </div>
-        `;
-    }
-}
-
-// Helper functions for enhanced task display
-function isOverdue(dueDate) {
-    return new Date(dueDate) < new Date().setHours(0, 0, 0, 0);
-}
-
-function formatDueDate(dueDate) {
-    const date = new Date(dueDate);
-    const today = new Date();
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-
-    if (date.toDateString() === today.toDateString()) {
-        return 'Due Today';
-    } else if (date.toDateString() === tomorrow.toDateString()) {
-        return 'Due Tomorrow';
-    } else if (isOverdue(dueDate)) {
-        return `Overdue: ${formatDate(dueDate)}`;
-    }
-    return `Due: ${formatDate(dueDate)}`;
-}
-
-// Delete task with confirmation
-function deleteTaskWithConfirmation(taskId) {
-    const task = tasks.find(t => t.id === taskId);
-    if (!task) return;
-
-    const notification = document.createElement('div');
-    notification.className = 'notification warning';
-    notification.innerHTML = `
-        <div class="notification-content">
-            <p>Delete "${task.title}"?</p>
-            <div class="notification-actions">
-                <button onclick="confirmDeleteTask(${taskId})" class="btn-danger">Delete</button>
-                <button onclick="this.closest('.notification').remove()" class="btn-secondary">Cancel</button>
-            </div>
-        </div>
-    `;
-    
-    document.body.appendChild(notification);
-    setTimeout(() => notification.classList.add('show'), 10);
-}
-
-function confirmDeleteTask(taskId) {
-    deleteTask(taskId);
-    showNotification('Task deleted successfully', 'success');
-    document.querySelector('.notification.warning')?.remove();
-}
-
-// Add these styles for new components
-const additionalStyles = document.createElement('style');
-additionalStyles.textContent = `
-    .empty-state {
-        text-align: center;
-        padding: 2rem;
-        color: var(--text-light);
-    }
-
-    .empty-state i {
-        font-size: 3rem;
-        margin-bottom: 1rem;
-        color: var(--border-color);
-    }
-
-    .notification.warning {
-        border-left-color: var(--warning-color);
-    }
-
-    .notification-content {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .notification-actions {
-        display: flex;
-        gap: 10px;
-    }
-
-    .btn-danger {
-        background-color: var(--danger-color);
-        color: white;
-        border: none;
-        padding: 5px 10px;
-        border-radius: var(--border-radius-sm);
-        cursor: pointer;
-    }
-
-    .overdue {
-        color: var(--danger-color);
-    }
-
-    .priority-indicator {
-        display: inline-block;
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        margin-right: 5px;
-    }
-
-    .priority.high .priority-indicator {
-        background-color: var(--danger-color);
-    }
-
-    .priority.medium .priority-indicator {
-        background-color: var(--warning-color);
-    }
-
-    .priority.low .priority-indicator {
-        background-color: var(--success-color);
-    }
-`;
-
-document.head.appendChild(additionalStyles);
-// Task Editing
-let editingTaskId = null;
-
-// Add Edit Modal HTML
-const editModalHTML = `
-<div id="editTaskModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2><i class="fas fa-edit"></i> Edit Task</h2>
-            <button class="close-modal">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        
-        <form id="editTaskForm" class="modal-body">
-            <div class="form-group">
-                <label for="editTaskTitle">Task Title</label>
-                <input type="text" id="editTaskTitle" name="taskTitle" required
-                    placeholder="Enter task title">
-            </div>
-
-            <div class="form-group">
-                <label for="editTaskDescription">Description</label>
-                <textarea id="editTaskDescription" name="taskDescription" rows="3"
-                    placeholder="Enter task description"></textarea>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="editTaskPriority">Priority</label>
-                    <select id="editTaskPriority" name="taskPriority" required>
-                        <option value="low">Low</option>
-                        <option value="medium">Medium</option>
-                        <option value="high">High</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="editTaskDueDate">Due Date</label>
-                    <input type="date" id="editTaskDueDate" name="taskDueDate" required>
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn-secondary cancel-modal">
-                    Cancel
-                </button>
-                <button type="submit" class="btn-primary">
-                    <i class="fas fa-save"></i> Save Changes
-                </button>
-            </div>
-        </form>
-    </div>
-</div>`;
-
-// Add edit modal to DOM
-document.body.insertAdjacentHTML('beforeend', editModalHTML);
-
-// Get edit modal elements
-const editTaskModal = document.getElementById('editTaskModal');
-const editTaskForm = document.getElementById('editTaskForm');
-const closeEditModalBtn = editTaskModal.querySelector('.close-modal');
-const cancelEditModalBtn = editTaskModal.querySelector('.cancel-modal');
-
-// Edit Task Functions
-function editTask(taskId) {
-    const task = tasks.find(t => t.id === taskId);
-    if (!task) return;
-
-    editingTaskId = taskId;
-    
-    // Populate form fields
-    document.getElementById('editTaskTitle').value = task.title;
-    document.getElementById('editTaskDescription').value = task.description || '';
-    document.getElementById('editTaskPriority').value = task.priority;
-    document.getElementById('editTaskDueDate').value = task.dueDate;
-
-    // Show modal
-    editTaskModal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-    
-    // Focus on title
-    setTimeout(() => {
-        document.getElementById('editTaskTitle').focus();
-    }, 300);
-}
-
-function hideEditModal() {
-    editTaskModal.classList.remove('active');
-    document.body.style.overflow = '';
-    editTaskForm.reset();
-    editingTaskId = null;
-    clearValidation();
-}
-
-// Edit Modal Event Listeners
-closeEditModalBtn.addEventListener('click', hideEditModal);
-cancelEditModalBtn.addEventListener('click', hideEditModal);
-
-// Close edit modal when clicking outside
-window.addEventListener('click', (e) => {
-    if (e.target === editTaskModal) {
-        hideEditModal();
-    }
-});
-
-// Handle edit form submission
-editTaskForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    
-    if (!validateEditForm()) {
-        return;
-    }
-
-    const formData = new FormData(editTaskForm);
-    const taskIndex = tasks.findIndex(t => t.id === editingTaskId);
-    
-    if (taskIndex !== -1) {
-        // Update task
-        tasks[taskIndex] = {
-            ...tasks[taskIndex],
-            title: formData.get('taskTitle').trim(),
-            description: formData.get('taskDescription').trim(),
-            priority: formData.get('taskPriority'),
-            dueDate: formData.get('taskDueDate'),
-            updatedAt: new Date().toISOString()
-        };
-
-        saveTasksToStorage();
-        updateTaskList();
-        hideEditModal();
-        showNotification('Task updated successfully!');
-    }
-});
-
-function validateEditForm() {
-    const title = document.getElementById('editTaskTitle').value.trim();
-    const dueDate = document.getElementById('editTaskDueDate').value;
-    const priority = document.getElementById('editTaskPriority').value;
-    
-    let isValid = true;
-    clearValidation();
-
-    if (title.length < 3) {
-        showError('editTaskTitle', 'Title must be at least 3 characters long');
-        isValid = false;
-    }
-
-    if (!dueDate) {
-        showError('editTaskDueDate', 'Please select a due date');
-        isValid = false;
-    }
-
-    if (!priority) {
-        showError('editTaskPriority', 'Please select a priority level');
-        isValid = false;
-    }
-
-    return isValid;
-}
-
-// Add styles for edit modal
-const editModalStyles = document.createElement('style');
-editModalStyles.textContent = `
-    #editTaskModal .modal-header i {
-        color: var(--warning-color);
-    }
-
-    .task-card.editing {
-        border: 2px solid var(--primary-color);
-        box-shadow: 0 0 10px rgba(74, 144, 226, 0.2);
-    }
-`;
-
-document.head.appendChild(editModalStyles);
-// Task Sorting and Filtering Enhancement
-let sortOptions = {
-    criteria: 'dueDate',
-    direction: 'asc'
-};
 
 // Add sort controls HTML
 const sortControlsHTML = `
@@ -800,7 +542,6 @@ const sortControlsHTML = `
 
 // Insert sort controls before task list
 const taskSection = document.querySelector('.task-section');
-const taskList = document.querySelector('.task-list');
 taskSection.insertBefore(
     document.createRange().createContextualFragment(sortControlsHTML),
     taskList
@@ -813,14 +554,14 @@ const taskFilters = document.querySelectorAll('.task-filters button');
 
 // Sort and Filter Event Listeners
 sortCriteriaSelect.addEventListener('change', (e) => {
-    sortOptions.criteria = e.target.value;
+    sortCriteria = e.target.value;
     updateTaskList();
 });
 
 sortDirectionBtn.addEventListener('click', () => {
-    sortOptions.direction = sortOptions.direction === 'asc' ? 'desc' : 'asc';
+    sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
     sortDirectionBtn.querySelector('i').className = 
-        `fas fa-sort-amount-${sortOptions.direction === 'asc' ? 'down' : 'up'}`;
+        `fas fa-sort-amount-${sortDirection === 'asc' ? 'down' : 'up'}`;
     updateTaskList();
 });
 
@@ -849,7 +590,7 @@ function updateTaskList(searchTerm = '') {
     filteredTasks.sort((a, b) => {
         let compareResult = 0;
         
-        switch (sortOptions.criteria) {
+        switch (sortCriteria) {
             case 'dueDate':
                 compareResult = new Date(a.dueDate) - new Date(b.dueDate);
                 break;
@@ -868,7 +609,7 @@ function updateTaskList(searchTerm = '') {
             }
         }
         
-        return sortOptions.direction === 'asc' ? compareResult : -compareResult;
+        return sortDirection === 'asc' ? compareResult : -compareResult;
     });
 
     // Update task counter with filter info
@@ -936,8 +677,9 @@ sortControlStyles.textContent = `
 document.head.appendChild(sortControlStyles);
 
 // Initialize sorting
-sortCriteriaSelect.value = sortOptions.criteria;
+sortCriteriaSelect.value = sortCriteria;
 updateTaskList();
+
 // Task Statistics and Visualization
 function getTaskStatistics() {
     const stats = {
@@ -1154,6 +896,7 @@ document.head.appendChild(statsStyles);
 
 // Update stats on initial load and after task changes
 updateStats();
+
 // Task Categories and Grouping
 const defaultCategories = [
     { id: 'work', name: 'Work', color: '#4a90e2', icon: 'fa-briefcase' },
@@ -1372,3 +1115,417 @@ function getTaskStatistics() {
 
     return stats;
 }
+
+// Task Editing
+let editingTaskId = null;
+
+// Add Edit Modal HTML
+const editModalHTML = `
+<div id="editTaskModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2><i class="fas fa-edit"></i> Edit Task</h2>
+            <button class="close-modal">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <form id="editTaskForm" class="modal-body">
+            <div class="form-group">
+                <label for="editTaskTitle">Task Title</label>
+                <input type="text" id="editTaskTitle" name="taskTitle" required
+                    placeholder="Enter task title">
+            </div>
+
+            <div class="form-group">
+                <label for="editTaskDescription">Description</label>
+                <textarea id="editTaskDescription" name="taskDescription" rows="3"
+                    placeholder="Enter task description"></textarea>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="editTaskPriority">Priority</label>
+                    <select id="editTaskPriority" name="taskPriority" required>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="editTaskCategory">Category</label>
+                    <select id="editTaskCategory" name="taskCategory" required>
+                        <option value="">Select a category</option>
+                        ${defaultCategories.map(category => `
+                            <option value="${category.id}" data-color="${category.color}" data-icon="${category.icon}">
+                                ${category.name}
+                            </option>
+                        `).join('')}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="editTaskDueDate">Due Date</label>
+                    <input type="date" id="editTaskDueDate" name="taskDueDate" required>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary cancel-modal">
+                    Cancel
+                </button>
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>`;
+
+// Add edit modal to DOM
+document.body.insertAdjacentHTML('beforeend', editModalHTML);
+
+// Get edit modal elements
+const editTaskModal = document.getElementById('editTaskModal');
+const editTaskForm = document.getElementById('editTaskForm');
+const closeEditModalBtn = editTaskModal.querySelector('.close-modal');
+const cancelEditModalBtn = editTaskModal.querySelector('.cancel-modal');
+
+// Edit Task Functions
+function editTask(taskId) {
+    const task = tasks.find(t => t.id === taskId);
+    if (!task) return;
+
+    editingTaskId = taskId;
+    
+    // Populate form fields
+    document.getElementById('editTaskTitle').value = task.title;
+    document.getElementById('editTaskDescription').value = task.description || '';
+    document.getElementById('editTaskPriority').value = task.priority;
+    document.getElementById('editTaskCategory').value = task.category;
+    document.getElementById('editTaskDueDate').value = task.dueDate;
+
+    // Show modal
+    editTaskModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    
+    // Focus on title
+    setTimeout(() => {
+        document.getElementById('editTaskTitle').focus();
+    }, 300);
+}
+
+function hideEditModal() {
+    editTaskModal.classList.remove('active');
+    document.body.style.overflow = '';
+    editTaskForm.reset();
+    editingTaskId = null;
+    clearValidation();
+}
+
+// Edit Modal Event Listeners
+closeEditModalBtn.addEventListener('click', hideEditModal);
+cancelEditModalBtn.addEventListener('click', hideEditModal);
+
+// Close edit modal when clicking outside
+window.addEventListener('click', (e) => {
+    if (e.target === editTaskModal) {
+        hideEditModal();
+    }
+});
+
+// Handle edit form submission
+editTaskForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    if (!validateEditForm()) {
+        return;
+    }
+
+    const formData = new FormData(editTaskForm);
+    const taskIndex = tasks.findIndex(t => t.id === editingTaskId);
+    
+    if (taskIndex !== -1) {
+        // Update task
+        tasks[taskIndex] = {
+            ...tasks[taskIndex],
+            title: formData.get('taskTitle').trim(),
+            description: formData.get('taskDescription').trim(),
+            priority: formData.get('taskPriority'),
+            category: formData.get('taskCategory'),
+            dueDate: formData.get('taskDueDate'),
+            updatedAt: new Date().toISOString()
+        };
+
+        saveTasksToStorage();
+        updateTaskList();
+        hideEditModal();
+        showNotification('Task updated successfully!');
+    }
+});
+
+function validateEditForm() {
+    const title = document.getElementById('editTaskTitle').value.trim();
+    const dueDate = document.getElementById('editTaskDueDate').value;
+    const priority = document.getElementById('editTaskPriority').value;
+    const category = document.getElementById('editTaskCategory').value;
+    
+    let isValid = true;
+    clearValidation();
+
+    if (title.length < 3) {
+        showError('editTaskTitle', 'Title must be at least 3 characters long');
+        isValid = false;
+    }
+
+    if (!dueDate) {
+        showError('editTaskDueDate', 'Please select a due date');
+        isValid = false;
+    }
+
+    if (!priority) {
+        showError('editTaskPriority', 'Please select a priority level');
+        isValid = false;
+    }
+
+    if (!category) {
+        showError('editTaskCategory', 'Please select a category');
+        isValid = false;
+    }
+
+    return isValid;
+}
+
+// Add styles for edit modal
+const editModalStyles = document.createElement('style');
+editModalStyles.textContent = `
+    #editTaskModal .modal-header i {
+        color: var(--warning-color);
+    }
+
+    .task-card.editing {
+        border: 2px solid var(--primary-color);
+        box-shadow: 0 0 10px rgba(74, 144, 226, 0.2);
+    }
+`;
+
+document.head.appendChild(editModalStyles);
+
+// Task Sorting and Filtering Enhancement
+let sortOptions = {
+    criteria: 'dueDate',
+    direction: 'asc'
+};
+
+// Enhanced updateTaskList function with sorting
+function updateTaskList(searchTerm = '') {
+    let filteredTasks = [...tasks];
+
+    // Apply search filter
+    if (searchTerm) {
+        const searchTermLower = searchTerm.toLowerCase();
+        filteredTasks = filteredTasks.filter(task => 
+            task.title.toLowerCase().includes(searchTermLower) ||
+            task.description.toLowerCase().includes(searchTermLower)
+        );
+    }
+
+    // Apply status filter
+    if (currentFilter !== 'all') {
+        filteredTasks = filteredTasks.filter(task => {
+            if (currentFilter === 'in progress') return task.status === 'pending';
+            return task.status === currentFilter;
+        });
+    }
+
+    // Apply sorting
+    filteredTasks.sort((a, b) => {
+        let compareResult = 0;
+        
+        switch (sortOptions.criteria) {
+            case 'dueDate':
+                compareResult = new Date(a.dueDate) - new Date(b.dueDate);
+                break;
+            case 'priority': {
+                const priorityOrder = { high: 0, medium: 1, low: 2 };
+                compareResult = priorityOrder[a.priority] - priorityOrder[b.priority];
+                break;
+            }
+            case 'title':
+                compareResult = a.title.localeCompare(b.title);
+                break;
+            case 'status':
+                compareResult = a.status.localeCompare(b.status);
+                break;
+        }
+        
+        return sortOptions.direction === 'asc' ? compareResult : -compareResult;
+    });
+
+    // Update task counter
+    const taskCounter = document.querySelector('.task-counter');
+    if (taskCounter) {
+        taskCounter.textContent = `${filteredTasks.length} ${filteredTasks.length === 1 ? 'task' : 'tasks'}`;
+    }
+
+    // Update DOM with enhanced task cards
+    taskList.innerHTML = filteredTasks.map(task => `
+        <div class="task-card ${task.status}" data-id="${task.id}">
+            <div class="task-priority ${task.priority}">
+                <span class="priority-indicator"></span>
+                ${task.priority}
+            </div>
+            <div class="task-content">
+                <h3>${task.title}</h3>
+                <p>${task.description || 'No description provided'}</p>
+                <div class="task-meta">
+                    <span class="due-date ${isOverdue(task.dueDate) ? 'overdue' : ''}">
+                        <i class="fas fa-calendar-alt"></i>
+                        ${formatDueDate(task.dueDate)}
+                    </span>
+                    <span class="status ${task.status}">
+                        <i class="fas ${task.status === 'completed' ? 'fa-check-circle' : 'fa-clock'}"></i>
+                        ${task.status}
+                    </span>
+                </div>
+            </div>
+            <div class="task-actions">
+                <button onclick="toggleTaskStatus(${task.id})" class="btn-icon" title="${task.status === 'completed' ? 'Mark as pending' : 'Mark as completed'}">
+                    <i class="fas ${task.status === 'completed' ? 'fa-undo' : 'fa-check'}"></i>
+                </button>
+                <button onclick="editTask(${task.id})" class="btn-icon edit-task" title="Edit task">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button onclick="deleteTaskWithConfirmation(${task.id})" class="btn-icon delete-task" title="Delete task">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>
+    `).join('');
+
+    // Update empty state
+    if (filteredTasks.length === 0) {
+        taskList.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-tasks"></i>
+                <h3>No tasks found</h3>
+                <p>${searchTerm ? 'Try a different search term' : 'Add your first task to get started!'}</p>
+            </div>
+        `;
+    }
+}
+
+// Helper functions for enhanced task display
+function isOverdue(dueDate) {
+    return new Date(dueDate) < new Date().setHours(0, 0, 0, 0);
+}
+
+function formatDueDate(dueDate) {
+    const date = new Date(dueDate);
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    if (date.toDateString() === today.toDateString()) {
+        return 'Due Today';
+    } else if (date.toDateString() === tomorrow.toDateString()) {
+        return 'Due Tomorrow';
+    } else if (isOverdue(dueDate)) {
+        return `Overdue: ${formatDate(dueDate)}`;
+    }
+    return `Due: ${formatDate(dueDate)}`;
+}
+
+// Delete task with confirmation
+function deleteTaskWithConfirmation(taskId) {
+    const task = tasks.find(t => t.id === taskId);
+    if (!task) return;
+
+    const notification = document.createElement('div');
+    notification.className = 'notification warning';
+    notification.innerHTML = `
+        <div class="notification-content">
+            <p>Delete "${task.title}"?</p>
+            <div class="notification-actions">
+                <button onclick="confirmDeleteTask(${taskId})" class="btn-danger">Delete</button>
+                <button onclick="this.closest('.notification').remove()" class="btn-secondary">Cancel</button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(notification);
+    setTimeout(() => notification.classList.add('show'), 10);
+}
+
+function confirmDeleteTask(taskId) {
+    deleteTask(taskId);
+    showNotification('Task deleted successfully', 'success');
+    document.querySelector('.notification.warning')?.remove();
+}
+
+// Add these styles for new components
+const additionalStyles = document.createElement('style');
+additionalStyles.textContent = `
+    .empty-state {
+        text-align: center;
+        padding: 2rem;
+        color: var(--text-light);
+    }
+
+    .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: var(--border-color);
+    }
+
+    .notification.warning {
+        border-left-color: var(--warning-color);
+    }
+
+    .notification-content {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .notification-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-danger {
+        background-color: var(--danger-color);
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: var(--border-radius-sm);
+        cursor: pointer;
+    }
+
+    .overdue {
+        color: var(--danger-color);
+    }
+
+    .priority-indicator {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 5px;
+    }
+
+    .priority.high .priority-indicator {
+        background-color: var(--danger-color);
+    }
+
+    .priority.medium .priority-indicator {
+        background-color: var(--warning-color);
+    }
+
+    .priority.low .priority-indicator {
+        background-color: var(--success-color);
+    }
+`;
+
+document.head.appendChild(additionalStyles);

@@ -432,6 +432,111 @@ input:focus, select:focus, textarea:focus {
     color: var(--white);
 }
 
+/* Task List Styles */
+.task-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.task-card {
+    display: grid;
+    grid-template-columns: 4px 1fr auto;
+    background: var(--white);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-md);
+    gap: var(--spacing-md);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.task-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.task-card .priority-indicator {
+    grid-row: 1 / -1;
+    border-radius: var(--border-radius-sm);
+}
+
+.task-card .priority-indicator.high {
+    background-color: var(--danger-color);
+}
+
+.task-card .priority-indicator.medium {
+    background-color: var(--warning-color);
+}
+
+.task-card .priority-indicator.low {
+    background-color: var(--success-color);
+}
+
+.task-card .task-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.task-card .task-title {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.task-card .task-description {
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+.task-card .task-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-size: 0.8rem;
+    color: var(--text-light);
+}
+
+.task-card .task-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.task-card .task-actions button {
+    padding: var(--spacing-xs);
+    color: var(--text-light);
+    border-radius: var(--border-radius-sm);
+    transition: all 0.3s ease;
+}
+
+.task-card .task-actions button:hover {
+    color: var(--primary-color);
+    background-color: var(--secondary-color);
+}
+
+.task-card.completed .task-title {
+    text-decoration: line-through;
+    color: var(--text-light);
+}
+
+.task-card.completed .priority-indicator {
+    opacity: 0.5;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: var(--spacing-xl);
+    color: var(--text-light);
+}
+
+.empty-state i {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-md);
+    color: var(--border-color);
+}
+
 /* Responsive Layout */
 @media (max-width: 1024px) {
     .quick-stats {
