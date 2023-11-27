@@ -1,0 +1,449 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+    padding: 20px;
+    color: #2c3e50;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+h1 {
+    text-align: center;
+    margin: 30px 0;
+    font-size: 2.5rem;
+    color: #2c3e50;
+}
+
+.loader-section {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    margin-bottom: 25px;
+    font-size: 1.8rem;
+    color: #34495e;
+}
+
+.loader-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+}
+
+.loader-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+}
+
+.loader-card:hover {
+    transform: translateY(-5px);
+}
+
+.loader-card p {
+    margin-top: 15px;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* Spinner Loaders */
+.spinner-1 {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.spinner-2 {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 4px solid transparent;
+    border-top-color: #3498db;
+    border-bottom-color: #e74c3c;
+    animation: spin-reverse 1.5s linear infinite;
+}
+
+.spinner-2::before {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    border: 4px solid transparent;
+    border-left-color: #2ecc71;
+    border-right-color: #f1c40f;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.spinner-3 {
+    display: flex;
+    gap: 5px;
+}
+
+.spinner-3::before,
+.spinner-3::after,
+.spinner-3 span {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background: #3498db;
+    border-radius: 50%;
+    animation: bounce 0.5s alternate infinite;
+}
+
+.spinner-3::before {
+    animation-delay: 0.1s;
+}
+
+.spinner-3::after {
+    animation-delay: 0.3s;
+}
+
+.spinner-4 {
+    display: flex;
+    gap: 3px;
+}
+
+.spinner-4::before,
+.spinner-4::after,
+.spinner-4 span {
+    content: '';
+    width: 3px;
+    height: 30px;
+    background: #3498db;
+    animation: wave 1s ease-in-out infinite;
+}
+
+/* Progress Bars */
+.progress-bar-1 {
+    width: 200px;
+    height: 6px;
+    background: #eee;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-bar-1 .progress-fill {
+    width: 100%;
+    height: 100%;
+    background: #3498db;
+    animation: progress-linear 2s ease-in-out infinite;
+}
+
+.progress-bar-2 {
+    width: 200px;
+    height: 6px;
+    background: #eee;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-bar-2 .progress-fill {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #3498db, #2ecc71, #3498db);
+    background-size: 200% 100%;
+    animation: progress-gradient 2s linear infinite;
+}
+
+.progress-bar-3 {
+    width: 200px;
+    height: 6px;
+    background: #eee;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-bar-3 .progress-fill {
+    width: 30%;
+    height: 100%;
+    background: #3498db;
+    animation: progress-bounce 1.5s ease-in-out infinite;
+}
+
+.progress-bar-4 {
+    width: 200px;
+    height: 6px;
+    background: #eee;
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-bar-4 .progress-dots {
+    position: absolute;
+    width: 30px;
+    height: 100%;
+    background: repeating-linear-gradient(
+        90deg,
+        #3498db 0px,
+        #3498db 4px,
+        transparent 4px,
+        transparent 8px
+    );
+    animation: progress-dots 1s linear infinite;
+}
+
+/* Pulse Animations */
+.pulse-1 {
+    width: 50px;
+    height: 50px;
+    background: #3498db;
+    border-radius: 50%;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.pulse-2 {
+    width: 50px;
+    height: 50px;
+    background: rgba(52, 152, 219, 0.3);
+    border-radius: 50%;
+    position: relative;
+}
+
+.pulse-2::after {
+    content: '';
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background: #3498db;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: grow 1s ease-in-out infinite;
+}
+
+.pulse-3 {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #3498db;
+    position: relative;
+}
+
+.pulse-3::before,
+.pulse-3::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #3498db;
+    border-radius: 50%;
+    animation: ripple 2s ease-out infinite;
+}
+
+.pulse-3::after {
+    animation-delay: 1s;
+}
+
+.pulse-4 {
+    width: 50px;
+    height: 50px;
+    background: #e74c3c;
+    border-radius: 0 0 50% 50%;
+    transform: rotate(45deg);
+    animation: heartbeat 1.2s ease-in-out infinite;
+}
+
+/* Creative Loaders */
+.creative-1 {
+    display: flex;
+    gap: 5px;
+    transform: rotate(180deg);
+}
+
+.creative-1 span {
+    width: 3px;
+    height: 40px;
+    background: #3498db;
+    animation: dna 1.5s ease-in-out infinite;
+}
+
+.creative-1 span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.creative-1 span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+.creative-2 .cube {
+    width: 50px;
+    height: 50px;
+    transform-style: preserve-3d;
+    animation: cube-spin 4s linear infinite;
+}
+
+.creative-2 .cube .side {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(52, 152, 219, 0.8);
+    border: 2px solid #fff;
+}
+
+.creative-3 {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.creative-3 .circle {
+    width: 10px;
+    height: 10px;
+    background: #3498db;
+    border-radius: 50%;
+    animation: newton 1s ease-in-out infinite;
+}
+
+.creative-4 .galaxy {
+    width: 50px;
+    height: 50px;
+    position: relative;
+    animation: galaxy-spin 3s linear infinite;
+}
+
+.creative-4 .star {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: #f1c40f;
+    border-radius: 50%;
+    animation: twinkle 1s ease-in-out infinite;
+}
+
+/* Animations */
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes spin-reverse {
+    to { transform: rotate(-360deg); }
+}
+
+@keyframes bounce {
+    to { transform: translateY(-10px); }
+}
+
+@keyframes wave {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(0.3); }
+}
+
+@keyframes progress-linear {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+@keyframes progress-gradient {
+    0% { background-position: 100% 0; }
+    100% { background-position: -100% 0; }
+}
+
+@keyframes progress-bounce {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(170%); }
+}
+
+@keyframes progress-dots {
+    to { transform: translateX(200px); }
+}
+
+@keyframes pulse {
+    0% { transform: scale(0.8); opacity: 0.5; }
+    50% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(0.8); opacity: 0.5; }
+}
+
+@keyframes grow {
+    0%, 100% { transform: translate(-50%, -50%) scale(0.8); }
+    50% { transform: translate(-50%, -50%) scale(1.2); }
+}
+
+@keyframes ripple {
+    from {
+        transform: scale(1);
+        opacity: 1;
+    }
+    to {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+@keyframes heartbeat {
+    0% { transform: rotate(45deg) scale(0.8); }
+    5% { transform: rotate(45deg) scale(0.9); }
+    10% { transform: rotate(45deg) scale(0.8); }
+    15% { transform: rotate(45deg) scale(1); }
+    50% { transform: rotate(45deg) scale(0.8); }
+    100% { transform: rotate(45deg) scale(0.8); }
+}
+
+@keyframes dna {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(0.5); }
+}
+
+@keyframes cube-spin {
+    from { transform: rotateX(0) rotateY(0) rotateZ(0); }
+    to { transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg); }
+}
+
+@keyframes newton {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+@keyframes galaxy-spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .loader-group {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+    }
+
+    .loader-card {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+}
