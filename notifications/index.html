@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Notification Collection</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Modern Notification Collection</h1>
+        
+        <section class="notification-section">
+            <h2>Toast Notifications</h2>
+            <div class="notification-group">
+                <div class="notification-card">
+                    <button class="trigger-btn" data-type="success">Success Toast</button>
+                    <div class="notification toast success">
+                        <i class="fas fa-check-circle"></i>
+                        <div class="content">
+                            <h3>Success</h3>
+                            <p>Your changes have been saved successfully!</p>
+                        </div>
+                        <button class="close-btn"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+
+                <div class="notification-card">
+                    <button class="trigger-btn" data-type="error">Error Toast</button>
+                    <div class="notification toast error">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <div class="content">
+                            <h3>Error</h3>
+                            <p>An error occurred while processing your request.</p>
+                        </div>
+                        <button class="close-btn"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+
+                <div class="notification-card">
+                    <button class="trigger-btn" data-type="warning">Warning Toast</button>
+                    <div class="notification toast warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div class="content">
+                            <h3>Warning</h3>
+                            <p>Please save your changes before leaving.</p>
+                        </div>
+                        <button class="close-btn"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+
+                <div class="notification-card">
+                    <button class="trigger-btn" data-type="info">Info Toast</button>
+                    <div class="notification toast info">
+                        <i class="fas fa-info-circle"></i>
+                        <div class="content">
+                            <h3>Info</h3>
+                            <p>New updates are available for your app.</p>
+                        </div>
+                        <button class="close-btn"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="notification-section">
+            <h2>Alert Boxes</h2>
+            <div class="notification-group">
+                <div class="notification-card">
+                    <button class="trigger-btn" data-type="alert-success">Success Alert</button>
+                    <div class="notification alert success">
+                        <div class="icon">
+                            <i class="fas fa-check"></i>
+                            <svg class="progress-ring" width="40" height="40">
+                                <circle class="progress-ring-circle" cx="20" cy="20" r="18"></circle>
+                            </svg>
+                        </div>
+                        <div class="content">
+                            <h3>Payment Successful</h3>
+                            <p>Your payment has been processed successfully.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="notification-card">
+                    <button class="trigger-btn" data-type="alert-error">Error Alert</button>
+                    <div class="notification alert error">
+                        <div class="icon">
+                            <i class="fas fa-times"></i>
+                            <svg class="progress-ring" width="40" height="40">
+                                <circle class="progress-ring-circle" cx="20" cy="20" r="18"></circle>
+                            </svg>
+                        </div>
+                        <div class="content">
+                            <h3>Payment Failed</h3>
+                            <p>There was an error processing your payment.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="notification-section">
+            <h2>Snackbars</h2>
+            <div class="notification-group">
+                <div class="notification-card">
+                    <button class="trigger-btn" data-type="snackbar">Simple Snackbar</button>
+                    <div class="notification snackbar">
+                        <p>Message sent successfully</p>
+                        <button class="action-btn">UNDO</button>
+                    </div>
+                </div>
+
+                <div class="notification-card">
+                    <button class="trigger-btn" data-type="snackbar-icon">Icon Snackbar</button>
+                    <div class="notification snackbar with-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>File uploaded successfully</p>
+                        <button class="action-btn">VIEW</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="notification-section">
+            <h2>Push Notifications</h2>
+            <div class="notification-group">
+                <div class="notification-card">
+                    <button class="trigger-btn" data-type="push">Message Push</button>
+                    <div class="notification push">
+                        <div class="avatar">
+                            <img src="https://i.pravatar.cc/40" alt="User Avatar">
+                        </div>
+                        <div class="content">
+                            <h3>New Message</h3>
+                            <p>John Doe sent you a message</p>
+                            <span class="time">Just now</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="notification-card">
+                    <button class="trigger-btn" data-type="push-action">Action Push</button>
+                    <div class="notification push with-actions">
+                        <div class="avatar">
+                            <img src="https://i.pravatar.cc/40?img=2" alt="User Avatar">
+                        </div>
+                        <div class="content">
+                            <h3>Friend Request</h3>
+                            <p>Jane Smith wants to connect</p>
+                            <div class="actions">
+                                <button class="accept">Accept</button>
+                                <button class="decline">Decline</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div id="notification-container"></div>
+    <script src="script.js"></script>
+</body>
+</html>
