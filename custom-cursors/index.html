@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Cursor Collection</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <div class="container">
+        <h1>Custom Cursor Collection</h1>
+
+        <section class="cursor-section">
+            <h2>Basic Cursors</h2>
+            <div class="cursor-group">
+                <div class="cursor-card default-cursor">
+                    <h3>Default Custom</h3>
+                    <p>Hover to see a custom dot cursor</p>
+                </div>
+
+                <div class="cursor-card ring-cursor">
+                    <h3>Ring Effect</h3>
+                    <p>Hover for expanding ring animation</p>
+                </div>
+
+                <div class="cursor-card gradient-cursor">
+                    <h3>Gradient Trail</h3>
+                    <p>Move cursor to see gradient trail</p>
+                </div>
+
+                <div class="cursor-card glow-cursor">
+                    <h3>Glowing Effect</h3>
+                    <p>Hover for a glowing cursor</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="cursor-section">
+            <h2>Interactive Cursors</h2>
+            <div class="cursor-group">
+                <div class="cursor-card magnetic-cursor">
+                    <button class="magnetic-button">
+                        <span>Magnetic Button</span>
+                    </button>
+                    <p>Button attracts the cursor</p>
+                </div>
+
+                <div class="cursor-card text-cursor">
+                    <h3>Text Revealer</h3>
+                    <p class="reveal-text">Hover to reveal hidden text with cursor spotlight</p>
+                </div>
+
+                <div class="cursor-card image-cursor">
+                    <div class="image-container">
+                        <img src="https://picsum.photos/300/200" alt="Sample Image">
+                    </div>
+                    <p>Image zoom on hover</p>
+                </div>
+
+                <div class="cursor-card draw-cursor">
+                    <div class="drawing-area">
+                        <p>Click and drag to draw</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cursor-section">
+            <h2>Icon Cursors</h2>
+            <div class="cursor-group">
+                <div class="cursor-card icon-cursor" data-cursor-icon="🔍">
+                    <h3>Search Icon</h3>
+                    <p>Hover to see search cursor</p>
+                </div>
+
+                <div class="cursor-card icon-cursor" data-cursor-icon="💡">
+                    <h3>Idea Icon</h3>
+                    <p>Hover to see lightbulb cursor</p>
+                </div>
+
+                <div class="cursor-card icon-cursor" data-cursor-icon="❤️">
+                    <h3>Heart Icon</h3>
+                    <p>Hover to see heart cursor</p>
+                </div>
+
+                <div class="cursor-card icon-cursor" data-cursor-icon="✨">
+                    <h3>Sparkle Icon</h3>
+                    <p>Hover to see sparkle cursor</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="cursor-section">
+            <h2>Action Cursors</h2>
+            <div class="cursor-group">
+                <div class="cursor-card drag-cursor">
+                    <div class="draggable-element">
+                        <i class="fas fa-arrows-alt"></i>
+                        <span>Drag Me</span>
+                    </div>
+                    <p>Cursor changes on draggable elements</p>
+                </div>
+
+                <div class="cursor-card link-cursor">
+                    <a href="#" class="custom-link">Hover Me</a>
+                    <p>Special cursor for links</p>
+                </div>
+
+                <div class="cursor-card copy-cursor">
+                    <div class="copyable-text">
+                        Click to copy this text
+                    </div>
+                    <p>Copy cursor on text selection</p>
+                </div>
+
+                <div class="cursor-card video-cursor">
+                    <div class="video-player">
+                        <i class="fas fa-play"></i>
+                    </div>
+                    <p>Video player cursor</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
