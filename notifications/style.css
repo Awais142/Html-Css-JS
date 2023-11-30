@@ -1,0 +1,389 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --success-color: #4caf50;
+    --error-color: #f44336;
+    --warning-color: #ff9800;
+    --info-color: #2196f3;
+    --text-color: #333;
+    --bg-color: #f5f7fa;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, var(--bg-color) 0%, #c3cfe2 100%);
+    min-height: 100vh;
+    padding: 20px;
+    color: var(--text-color);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+h1 {
+    text-align: center;
+    margin: 30px 0;
+    font-size: 2.5rem;
+    color: var(--text-color);
+}
+
+.notification-section {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 5px 15px var(--shadow-color);
+}
+
+h2 {
+    margin-bottom: 25px;
+    font-size: 1.8rem;
+    color: var(--text-color);
+}
+
+.notification-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+.notification-card {
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+}
+
+.notification-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Trigger Buttons */
+.trigger-btn {
+    width: 100%;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    background: #fff;
+    color: var(--text-color);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+.trigger-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+/* Toast Notifications */
+.notification.toast {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    border-radius: 8px;
+    background: white;
+    box-shadow: 0 4px 12px var(--shadow-color);
+    margin-top: 20px;
+    animation: slideIn 0.3s ease-out;
+}
+
+.toast i {
+    font-size: 24px;
+    margin-right: 12px;
+}
+
+.toast .content {
+    flex: 1;
+}
+
+.toast h3 {
+    font-size: 1rem;
+    margin-bottom: 4px;
+}
+
+.toast p {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.toast .close-btn {
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    padding: 4px;
+    transition: color 0.3s ease;
+}
+
+.toast .close-btn:hover {
+    color: #333;
+}
+
+/* Toast Colors */
+.toast.success {
+    border-left: 4px solid var(--success-color);
+}
+
+.toast.success i {
+    color: var(--success-color);
+}
+
+.toast.error {
+    border-left: 4px solid var(--error-color);
+}
+
+.toast.error i {
+    color: var(--error-color);
+}
+
+.toast.warning {
+    border-left: 4px solid var(--warning-color);
+}
+
+.toast.warning i {
+    color: var(--warning-color);
+}
+
+.toast.info {
+    border-left: 4px solid var(--info-color);
+}
+
+.toast.info i {
+    color: var(--info-color);
+}
+
+/* Alert Boxes */
+.notification.alert {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border-radius: 12px;
+    background: white;
+    box-shadow: 0 4px 12px var(--shadow-color);
+    margin-top: 20px;
+    animation: scaleIn 0.3s ease-out;
+}
+
+.alert .icon {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    margin-right: 16px;
+}
+
+.alert i {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20px;
+    z-index: 1;
+}
+
+.progress-ring-circle {
+    fill: none;
+    stroke-width: 3;
+    stroke-linecap: round;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+    transition: stroke-dashoffset 0.3s ease;
+}
+
+/* Alert Colors */
+.alert.success .icon i {
+    color: var(--success-color);
+}
+
+.alert.success .progress-ring-circle {
+    stroke: var(--success-color);
+}
+
+.alert.error .icon i {
+    color: var(--error-color);
+}
+
+.alert.error .progress-ring-circle {
+    stroke: var(--error-color);
+}
+
+/* Snackbars */
+.notification.snackbar {
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    height: 48px;
+    background: #323232;
+    color: white;
+    border-radius: 4px;
+    margin-top: 20px;
+    animation: slideUp 0.3s ease-out;
+}
+
+.snackbar p {
+    flex: 1;
+    font-size: 0.9rem;
+}
+
+.snackbar .action-btn {
+    background: none;
+    border: none;
+    color: #90caf9;
+    font-weight: 500;
+    text-transform: uppercase;
+    padding: 8px;
+    cursor: pointer;
+    margin-left: 8px;
+}
+
+.snackbar.with-icon i {
+    margin-right: 12px;
+    font-size: 20px;
+}
+
+/* Push Notifications */
+.notification.push {
+    display: flex;
+    padding: 16px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px var(--shadow-color);
+    margin-top: 20px;
+    animation: slideInRight 0.3s ease-out;
+}
+
+.push .avatar {
+    margin-right: 12px;
+}
+
+.push .avatar img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.push .content {
+    flex: 1;
+}
+
+.push h3 {
+    font-size: 1rem;
+    margin-bottom: 4px;
+}
+
+.push p {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.push .time {
+    font-size: 0.8rem;
+    color: #999;
+}
+
+.push.with-actions .actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.push .actions button {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.push .actions .accept {
+    background: var(--success-color);
+    color: white;
+}
+
+.push .actions .decline {
+    background: #f5f5f5;
+    color: var(--text-color);
+}
+
+/* Animations */
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Notification Container */
+#notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .notification-group {
+        grid-template-columns: 1fr;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    .notification-section {
+        padding: 20px;
+    }
+}
