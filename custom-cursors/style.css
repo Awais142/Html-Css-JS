@@ -3,6 +3,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    cursor: none !important;
 }
 
 html, body {
@@ -39,8 +40,7 @@ h1 {
     transform: translate(-50%, -50%);
     border-radius: 50%;
     z-index: 999999;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    will-change: transform;
+    transition: transform 0.15s ease;
 }
 
 .cursor-dot {
@@ -53,11 +53,12 @@ h1 {
     width: 40px;
     height: 40px;
     border: 2px solid #1a73e8;
+    transition: transform 0.3s ease;
 }
 
 /* Cursor States */
 .cursor-click {
-    transform: translate(-50%, -50%) scale(0.5);
+    transform: translate(-50%, -50%) scale(0.8);
 }
 
 .cursor-hover {
@@ -225,7 +226,6 @@ body[data-cursor="square"] .cursor-outline {
 
 .cursor-btn i {
     font-size: 1rem;
-    pointer-events: none;
 }
 
 /* Test Area */
@@ -295,7 +295,6 @@ body[data-cursor="square"] .cursor-outline {
     }
 
     .cursor-btn {
-        padding: 0.6rem 1rem;
         cursor: pointer !important;
     }
 }
