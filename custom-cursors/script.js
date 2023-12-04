@@ -1,3 +1,117 @@
+// Wait for DOM to load
+document.addEventListener('DOMContentLoaded', () => {
+    // Create cursor elements
+    const cursorDot = document.createElement('div');
+    const cursorOutline = document.createElement('div');
+    
+    // Add classes to cursor elements
+    cursorDot.classList.add('cursor-dot');
+    cursorOutline.classList.add('cursor-outline');
+    
+    // Add cursors to body
+    document.body.appendChild(cursorDot);
+    document.body.appendChild(cursorOutline);
+
+    // Initialize cursor positions
+    let mouseX = -100;
+    let mouseY = -100;
+    let outlineX = -100;
+    let outlineY = -100;
+
+    // Mouse movement handler
+    function onMouseMove(e) {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    }
+
+    // Animation loop for smooth cursor movement
+    function animate() {
+        // Smooth movement for outline
+        outlineX += (mouseX - outlineX) * 0.2;
+        outlineY += (mouseY - outlineY) * 0.2;
+
+        // Update cursor positions with transform for better performance
+        cursorDot.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
+        cursorOutline.style.transform = `translate(${outlineX}px, ${outlineY}px)`;
+
+        requestAnimationFrame(animate);
+    }
+
+    // Mouse click animation
+    function onMouseDown() {
+        cursorDot.classList.add('cursor-click');
+        cursorOutline.classList.add('cursor-click');
+    }
+
+    function onMouseUp() {
+        cursorDot.classList.remove('cursor-click');
+        cursorOutline.classList.remove('cursor-click');
+    }
+
+    // Cursor type switching
+    function switchCursorType(type) {
+        document.body.setAttribute('data-cursor', type);
+        const currentCursorText = document.getElementById('current-cursor');
+        if (currentCursorText) {
+            currentCursorText.textContent = type.charAt(0).toUpperCase() + type.slice(1);
+        }
+
+        // Update active button
+        document.querySelectorAll('.cursor-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.cursor === type);
+        });
+    }
+
+    // Handle cursor entering/leaving elements
+    function handleElementHover(element) {
+        element.addEventListener('mouseenter', () => {
+            cursorDot.classList.add('cursor-hover');
+            cursorOutline.classList.add('cursor-hover');
+        });
+
+        element.addEventListener('mouseleave', () => {
+            cursorDot.classList.remove('cursor-hover');
+            cursorOutline.classList.remove('cursor-hover');
+        });
+    }
+
+    // Initialize event listeners
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mousedown', onMouseDown);
+    document.addEventListener('mouseup', onMouseUp);
+
+    // Handle window events
+    document.addEventListener('mouseleave', () => {
+        cursorDot.classList.add('cursor-hidden');
+        cursorOutline.classList.add('cursor-hidden');
+    });
+
+    document.addEventListener('mouseenter', (event) => {
+        cursorDot.classList.remove('cursor-hidden');
+        cursorOutline.classList.remove('cursor-hidden');
+        mouseX = outlineX = event.clientX;
+        mouseY = outlineY = event.clientY;
+    });
+
+    // Add click handlers to cursor buttons
+    document.querySelectorAll('.cursor-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const cursorType = btn.dataset.cursor;
+            switchCursorType(cursorType);
+        });
+        handleElementHover(btn);
+    });
+
+    // Add hover effects to interactive elements
+    document.querySelectorAll('.test-btn, .test-link, .test-box').forEach(handleElementHover);
+
+    // Start animation loop
+    animate();
+
+    // Set initial cursor type
+    switchCursorType('default');
+});
+
 // Get cursor elements
 const cursor = document.querySelector('.custom-cursor');
 const cursorOuter = document.querySelector('.custom-cursor-outer');
@@ -79,89 +193,4 @@ document.querySelectorAll('.text-follow').forEach(element => {
         const text = element.querySelector('p');
         text.style.transform = '';
     });
-});
-
-// Cursor Elements
-const cursorDot = document.querySelector('.cursor-dot');
-const cursorOutline = document.querySelector('.cursor-outline');
-const cursorButtons = document.querySelectorAll('.cursor-btn');
-const currentCursorText = document.getElementById('current-cursor');
-
-// Initial cursor type
-document.body.setAttribute('data-cursor', 'default');
-
-// Mouse movement handler
-function onMouseMove(e) {
-    const posX = e.clientX;
-    const posY = e.clientY;
-
-    // Animate cursor dot
-    cursorDot.style.transform = `translate(${posX}px, ${posY}px)`;
-    
-    // Add slight delay to cursor outline for smooth effect
-    requestAnimationFrame(() => {
-        cursorOutline.style.transform = `translate(${posX}px, ${posY}px)`;
-    });
-}
-
-// Mouse click animation
-function onMouseDown() {
-    cursorDot.style.transform += ' scale(0.5)';
-    cursorOutline.style.transform += ' scale(0.75)';
-}
-
-function onMouseUp() {
-    cursorDot.style.transform = cursorDot.style.transform.replace(' scale(0.5)', '');
-    cursorOutline.style.transform = cursorOutline.style.transform.replace(' scale(0.75)', '');
-}
-
-// Cursor type switching
-function switchCursorType(type) {
-    document.body.setAttribute('data-cursor', type);
-    currentCursorText.textContent = type.charAt(0).toUpperCase() + type.slice(1);
-    
-    // Update active button
-    cursorButtons.forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.cursor === type);
-    });
-}
-
-// Event listeners for cursor buttons
-cursorButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-        const cursorType = btn.dataset.cursor;
-        switchCursorType(cursorType);
-    });
-});
-
-// Add event listeners
-document.addEventListener('mousemove', onMouseMove);
-document.addEventListener('mousedown', onMouseDown);
-document.addEventListener('mouseup', onMouseUp);
-
-// Handle cursor entering/leaving elements
-const handleElementHover = (element) => {
-    element.addEventListener('mouseenter', () => {
-        cursorDot.style.transform += ' scale(1.5)';
-        cursorOutline.style.transform += ' scale(1.5)';
-    });
-
-    element.addEventListener('mouseleave', () => {
-        cursorDot.style.transform = cursorDot.style.transform.replace(' scale(1.5)', '');
-        cursorOutline.style.transform = cursorOutline.style.transform.replace(' scale(1.5)', '');
-    });
-};
-
-// Apply hover effects to interactive elements
-document.querySelectorAll('.test-btn, .test-link, .test-box').forEach(handleElementHover);
-
-// Hide default cursor when leaving the window
-document.addEventListener('mouseleave', () => {
-    cursorDot.style.opacity = '0';
-    cursorOutline.style.opacity = '0';
-});
-
-document.addEventListener('mouseenter', () => {
-    cursorDot.style.opacity = '1';
-    cursorOutline.style.opacity = '1';
 });

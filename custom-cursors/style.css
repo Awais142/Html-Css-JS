@@ -3,7 +3,10 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    cursor: none;
+}
+
+html, body {
+    cursor: none !important;
 }
 
 body {
@@ -35,8 +38,9 @@ h1 {
     left: 0;
     transform: translate(-50%, -50%);
     border-radius: 50%;
-    z-index: 9999;
-    transition: opacity 0.3s ease;
+    z-index: 999999;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    will-change: transform;
 }
 
 .cursor-dot {
@@ -49,6 +53,19 @@ h1 {
     width: 40px;
     height: 40px;
     border: 2px solid #1a73e8;
+}
+
+/* Cursor States */
+.cursor-click {
+    transform: translate(-50%, -50%) scale(0.5);
+}
+
+.cursor-hover {
+    transform: translate(-50%, -50%) scale(1.5);
+}
+
+.cursor-hidden {
+    opacity: 0;
 }
 
 /* Cursor Types */
@@ -194,7 +211,6 @@ body[data-cursor="square"] .cursor-outline {
     background: #f0f2f5;
     color: #333;
     font-size: 0.9rem;
-    cursor: pointer;
     transition: all 0.3s ease;
 }
 
@@ -209,6 +225,7 @@ body[data-cursor="square"] .cursor-outline {
 
 .cursor-btn i {
     font-size: 1rem;
+    pointer-events: none;
 }
 
 /* Test Area */
@@ -233,21 +250,18 @@ body[data-cursor="square"] .cursor-outline {
     color: white;
     border: none;
     border-radius: 5px;
-    cursor: none;
 }
 
 .test-link {
     color: #1a73e8;
     text-decoration: none;
     padding: 0.8rem 0;
-    cursor: none;
 }
 
 .test-box {
     padding: 0.8rem 1.5rem;
     background: #f0f2f5;
     border-radius: 5px;
-    cursor: none;
 }
 
 /* Cursor Info */
@@ -282,5 +296,6 @@ body[data-cursor="square"] .cursor-outline {
 
     .cursor-btn {
         padding: 0.6rem 1rem;
+        cursor: pointer !important;
     }
 }
