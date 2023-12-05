@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Text Animations</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="text-section">
+            <h1 class="typing-text">Welcome to Text Animations</h1>
+            <p class="typing-subtitle">Discover the power of dynamic typography</p>
+        </div>
+
+        <div class="animation-controls">
+            <button class="control-btn active" data-animation="typing">
+                <i class="fas fa-keyboard"></i>
+                Typing
+            </button>
+            <button class="control-btn" data-animation="wave">
+                <i class="fas fa-water"></i>
+                Wave
+            </button>
+            <button class="control-btn" data-animation="bounce">
+                <i class="fas fa-basketball-ball"></i>
+                Bounce
+            </button>
+            <button class="control-btn" data-animation="fade">
+                <i class="fas fa-ghost"></i>
+                Fade
+            </button>
+            <button class="control-btn" data-animation="glitch">
+                <i class="fas fa-bug"></i>
+                Glitch
+            </button>
+        </div>
+
+        <div class="interactive-text">
+            <div class="text-container" data-text="Hover over me!">
+                Hover over me!
+            </div>
+            <div class="text-container" data-text="Click me!">
+                Click me!
+            </div>
+            <div class="text-container" data-text="Interactive Text">
+                Interactive Text
+            </div>
+        </div>
+
+        <div class="custom-text-section">
+            <input type="text" id="custom-text" placeholder="Type your text here...">
+            <button id="animate-btn">
+                <i class="fas fa-magic"></i>
+                Animate
+            </button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
