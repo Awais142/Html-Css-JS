@@ -29,9 +29,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Function to split text into spans with delay indices
-    function splitText(element) {
+    function splitText(element, animationType) {
         const text = element.textContent.trim();
         element.textContent = '';
+        
+        // For typing animation, don't split text
+        if (animationType === 'typing') {
+            element.textContent = text;
+            return;
+        }
+
+        // For other animations, split into spans
         text.split('').forEach((char, i) => {
             const span = document.createElement('span');
             span.textContent = char;
@@ -47,28 +55,31 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Reset the text if it was split
         const originalText = element.getAttribute('data-original-text') || element.textContent;
-        element.textContent = originalText;
-
+        
         // Apply new animation
         switch (animationType) {
             case 'typing':
+                element.textContent = originalText;
                 element.classList.add('typing');
                 break;
             case 'wave':
             case 'bounce':
             case 'fade':
             case 'rainbow':
-                splitText(element);
+                splitText(element, animationType);
                 element.classList.add(animationType);
                 break;
             case 'glitch':
+                element.textContent = originalText;
                 element.setAttribute('data-text', originalText);
                 element.classList.add('glitch');
                 break;
             case 'shake':
+                element.textContent = originalText;
                 element.classList.add('shake');
                 break;
             case 'neon':
+                element.textContent = originalText;
                 element.classList.add('neon');
                 break;
         }
@@ -101,6 +112,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         container.addEventListener('mouseleave', () => {
             container.textContent = container.getAttribute('data-original-text');
+            container.style.fontFamily = container.style.fontFamily || 'inherit';
+            container.style.color = container.style.color || 'inherit';
         });
 
         container.addEventListener('click', () => {
@@ -141,6 +154,8 @@ document.addEventListener('DOMContentLoaded', () => {
         newText.addEventListener('click', () => {
             applyAnimation(newText, 'glitch');
         });
+
+        return newText;
     }
 
     // Custom text animation
