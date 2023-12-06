@@ -14,6 +14,13 @@
             <p class="typing-subtitle">Discover the power of dynamic typography</p>
         </div>
 
+        <div class="theme-toggle">
+            <button id="theme-btn">
+                <i class="fas fa-moon"></i>
+                <span>Toggle Theme</span>
+            </button>
+        </div>
+
         <div class="animation-controls">
             <button class="control-btn active" data-animation="typing">
                 <i class="fas fa-keyboard"></i>
@@ -35,6 +42,24 @@
                 <i class="fas fa-bug"></i>
                 Glitch
             </button>
+            <button class="control-btn" data-animation="rainbow">
+                <i class="fas fa-rainbow"></i>
+                Rainbow
+            </button>
+            <button class="control-btn" data-animation="shake">
+                <i class="fas fa-dice"></i>
+                Shake
+            </button>
+            <button class="control-btn" data-animation="neon">
+                <i class="fas fa-lightbulb"></i>
+                Neon
+            </button>
+        </div>
+
+        <div class="animation-speed">
+            <label for="speed-slider">Animation Speed</label>
+            <input type="range" id="speed-slider" min="0.5" max="2" step="0.1" value="1">
+            <span id="speed-value">1x</span>
         </div>
 
         <div class="interactive-text">
@@ -50,11 +75,31 @@
         </div>
 
         <div class="custom-text-section">
-            <input type="text" id="custom-text" placeholder="Type your text here...">
+            <div class="text-controls">
+                <input type="text" id="custom-text" placeholder="Type your text here...">
+                <select id="font-selector">
+                    <option value="'Segoe UI'">Default</option>
+                    <option value="'Courier New'">Typewriter</option>
+                    <option value="'Comic Sans MS'">Playful</option>
+                    <option value="'Times New Roman'">Classic</option>
+                    <option value="'Impact'">Bold</option>
+                </select>
+                <input type="color" id="color-picker" value="#ffffff">
+            </div>
             <button id="animate-btn">
                 <i class="fas fa-magic"></i>
                 Animate
             </button>
+        </div>
+
+        <div class="preset-texts">
+            <h3>Try These Presets</h3>
+            <div class="preset-grid">
+                <button class="preset-btn" data-text="🌟 Sparkle Magic ✨">Sparkle</button>
+                <button class="preset-btn" data-text="🎮 Game Over 🎮">Gaming</button>
+                <button class="preset-btn" data-text="🎵 Music Vibes 🎵">Music</button>
+                <button class="preset-btn" data-text="🚀 Space Explorer 🚀">Space</button>
+            </div>
         </div>
     </div>
     <script src="script.js"></script>
