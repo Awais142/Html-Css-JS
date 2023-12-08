@@ -100,37 +100,108 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Sample data for different periods
     function updateRevenueChart(period) {
-        const data = {
-            weekly: [15000, 18000, 21000, 19000, 22000, 25000],
-            monthly: [65000, 59000, 80000, 81000, 76000, 95000],
-            yearly: [800000, 900000, 1100000, 1050000, 1200000, 1300000]
-        };
+        updateChartWithLoading(revenueChart, () => {
+            const data = {
+                weekly: [15000, 18000, 21000, 19000, 22000, 25000],
+                monthly: [65000, 59000, 80000, 81000, 76000, 95000],
+                yearly: [800000, 900000, 1100000, 1050000, 1200000, 1300000]
+            };
 
-        const labels = {
-            weekly: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-            monthly: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-            yearly: ['2018', '2019', '2020', '2021', '2022', '2023']
-        };
+            const labels = {
+                weekly: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                monthly: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                yearly: ['2018', '2019', '2020', '2021', '2022', '2023']
+            };
 
-        revenueChart.data.labels = labels[period];
-        revenueChart.data.datasets[0].data = data[period];
-        revenueChart.update();
+            revenueChart.data.labels = labels[period];
+            revenueChart.data.datasets[0].data = data[period];
+            revenueChart.update('active');
+        });
     }
 
     function updateUserActivityChart(period) {
-        const data = {
-            daily: [1200, 1900, 1500, 2100, 1800, 1400, 1300],
-            weekly: [8500, 9200, 9800, 8900, 9500, 9100, 8800]
-        };
+        updateChartWithLoading(userActivityChart, () => {
+            const data = {
+                daily: [1200, 1900, 1500, 2100, 1800, 1400, 1300],
+                weekly: [8500, 9200, 9800, 8900, 9500, 9100, 8800]
+            };
 
-        const labels = {
-            daily: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-            weekly: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7']
-        };
+            const labels = {
+                daily: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                weekly: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7']
+            };
 
-        userActivityChart.data.labels = labels[period];
-        userActivityChart.data.datasets[0].data = data[period];
-        userActivityChart.update();
+            userActivityChart.data.labels = labels[period];
+            userActivityChart.data.datasets[0].data = data[period];
+            userActivityChart.update('active');
+        });
+    }
+
+    // Animation Utilities
+    function animateNumber(element, start, end, duration) {
+        let current = start;
+        const range = end - start;
+        const increment = range / (duration / 16);
+        const timer = setInterval(() => {
+            current += increment;
+            if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
+                current = end;
+                clearInterval(timer);
+            }
+            element.textContent = formatNumber(Math.round(current));
+        }, 16);
+    }
+
+    function formatNumber(number) {
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    // Animate statistics on load
+    const statNumbers = document.querySelectorAll('.stat-number');
+    statNumbers.forEach(stat => {
+        const endValue = parseInt(stat.textContent.replace(/[^0-9.-]+/g, ""));
+        stat.textContent = '0';
+        animateNumber(stat, 0, endValue, 1500);
+    });
+
+    // Intersection Observer for animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '20px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate-fade-in');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    // Observe elements for animation
+    document.querySelectorAll('.stat-card, .chart-container').forEach(el => {
+        observer.observe(el);
+    });
+
+    // Add loading animation
+    function showLoading(element) {
+        element.classList.add('loading');
+    }
+
+    function hideLoading(element) {
+        element.classList.remove('loading');
+    }
+
+    // Add loading state during chart updates
+    function updateChartWithLoading(chart, updateFn) {
+        const container = chart.canvas.parentElement;
+        showLoading(container);
+        
+        setTimeout(() => {
+            updateFn();
+            hideLoading(container);
+        }, 600);
     }
 
     // Add hover effect to stat cards
@@ -158,5 +229,19 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.toggle('light-theme');
         themeBtn.querySelector('i').classList.toggle('fa-sun');
         themeBtn.querySelector('i').classList.toggle('fa-moon');
+    });
+
+    // Add smooth scrolling for navigation
+    document.querySelectorAll('nav li').forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
+            const target = document.querySelector(item.getAttribute('data-target'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
     });
 });
