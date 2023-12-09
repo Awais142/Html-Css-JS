@@ -5,69 +5,167 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Glassmorphic Dashboard</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <div class="background">
-        <div class="shape shape1"></div>
-        <div class="shape shape2"></div>
-        <div class="shape shape3"></div>
-    </div>
-
-    <div class="dashboard">
+    <div class="dashboard-container">
         <!-- Sidebar -->
-        <aside class="sidebar">
+        <nav class="sidebar">
             <div class="logo">
                 <i class="fas fa-chart-line"></i>
-                <span>GlassBoard</span>
+                <span>Dashboard</span>
             </div>
-            <nav>
-                <ul>
-                    <li class="nav-link active" data-tab-id="dashboard">
-                        <i class="fas fa-home"></i>
-                        <span>Dashboard</span>
-                    </li>
-                    <li class="nav-link" data-tab-id="analytics">
-                        <i class="fas fa-chart-bar"></i>
-                        <span>Analytics</span>
-                    </li>
-                    <li class="nav-link" data-tab-id="users">
-                        <i class="fas fa-users"></i>
-                        <span>Users</span>
-                    </li>
-                    <li class="nav-link" data-tab-id="settings">
-                        <i class="fas fa-cog"></i>
-                        <span>Settings</span>
-                    </li>
-                </ul>
-            </nav>
-        </aside>
+            <ul class="nav-list">
+                <li class="nav-item active" data-tab="dashboard">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </li>
+                <li class="nav-item" data-tab="analytics">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Analytics</span>
+                </li>
+                <li class="nav-item" data-tab="users">
+                    <i class="fas fa-users"></i>
+                    <span>Users</span>
+                </li>
+                <li class="nav-item" data-tab="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </li>
+            </ul>
+        </nav>
 
         <!-- Main Content -->
         <main class="main-content">
-            <header>
+            <!-- Header -->
+            <header class="header">
                 <div class="search-bar">
                     <i class="fas fa-search"></i>
                     <input type="text" placeholder="Search...">
                 </div>
-                <div class="user-profile">
+                <div class="header-right">
                     <div class="notifications">
                         <i class="fas fa-bell"></i>
                         <span class="badge">3</span>
                     </div>
-                    <div class="profile">
-                        <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="Profile">
+                    <div class="user-profile">
+                        <img src="https://ui-avatars.com/api/?name=John+Doe" alt="Profile">
                         <span>John Doe</span>
                     </div>
                 </div>
             </header>
 
-            <div class="content">
-                <!-- Content will be added in next steps -->
+            <!-- Dashboard Content -->
+            <div id="dashboard" class="tab-content active">
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stats-card">
+                        <div class="stats-info">
+                            <h3>Total Users</h3>
+                            <p class="stats-number">28,420</p>
+                            <span class="stats-change positive">+12.5%</span>
+                        </div>
+                        <i class="fas fa-users stats-icon"></i>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-info">
+                            <h3>Total Sales</h3>
+                            <p class="stats-number">$86,320</p>
+                            <span class="stats-change positive">+8.2%</span>
+                        </div>
+                        <i class="fas fa-shopping-cart stats-icon"></i>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-info">
+                            <h3>Revenue</h3>
+                            <p class="stats-number">$42,580</p>
+                            <span class="stats-change negative">-3.1%</span>
+                        </div>
+                        <i class="fas fa-dollar-sign stats-icon"></i>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-info">
+                            <h3>Rating</h3>
+                            <p class="stats-number">4.8</p>
+                            <span class="stats-change positive">+0.3</span>
+                        </div>
+                        <i class="fas fa-star stats-icon"></i>
+                    </div>
+                </div>
+
+                <!-- Charts Grid -->
+                <div class="charts-grid">
+                    <!-- Revenue Chart -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Revenue Overview</h3>
+                            <div class="chart-actions">
+                                <button class="active" data-period="weekly">Week</button>
+                                <button data-period="monthly">Month</button>
+                                <button data-period="yearly">Year</button>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- User Activity Chart -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>User Activity</h3>
+                            <div class="chart-actions">
+                                <button class="active" data-period="daily">Daily</button>
+                                <button data-period="weekly">Weekly</button>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="userActivityChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Traffic Sources Chart -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Traffic Sources</h3>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="trafficChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Demographics Chart -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>User Demographics</h3>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="demographicsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Tab -->
+            <div id="analytics" class="tab-content">
+                <h2>Analytics Content</h2>
+                <p>Analytics content will be displayed here.</p>
+            </div>
+
+            <!-- Users Tab -->
+            <div id="users" class="tab-content">
+                <h2>Users Management</h2>
+                <p>User management interface will be displayed here.</p>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settings" class="tab-content">
+                <h2>Settings</h2>
+                <p>Settings and configuration options will be displayed here.</p>
             </div>
         </main>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

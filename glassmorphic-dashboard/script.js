@@ -1,305 +1,305 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Chart Configuration
+    // Initialize Chart.js global settings
     Chart.defaults.color = '#fff';
     Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.1)';
+    Chart.defaults.responsive = true;
+    Chart.defaults.maintainAspectRatio = false;
 
-    // Tab Switching
-    const tabs = document.querySelectorAll('.nav-link');
-    const contentSections = document.querySelectorAll('[data-tab]');
+    // Tab Navigation
+    const navItems = document.querySelectorAll('.nav-item');
+    const tabContents = document.querySelectorAll('.tab-content');
 
     function switchTab(tabId) {
-        // Hide all content sections
-        contentSections.forEach(section => {
-            section.style.display = 'none';
+        // Hide all tab contents
+        tabContents.forEach(content => {
+            content.classList.remove('active');
         });
 
-        // Remove active class from all tabs
-        tabs.forEach(tab => {
-            tab.classList.remove('active');
+        // Remove active class from all nav items
+        navItems.forEach(item => {
+            item.classList.remove('active');
         });
 
-        // Show selected content and activate tab
-        document.querySelectorAll(`[data-tab="${tabId}"]`).forEach(section => {
-            section.style.display = 'block';
-        });
-        const activeTab = document.querySelector(`[data-tab-id="${tabId}"]`);
-        if (activeTab) {
-            activeTab.classList.add('active');
+        // Show selected tab content and activate nav item
+        document.getElementById(tabId).classList.add('active');
+        document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+
+        // Reinitialize charts if switching to dashboard
+        if (tabId === 'dashboard') {
+            initializeCharts();
         }
     }
 
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            const tabId = tab.getAttribute('data-tab-id');
+    navItems.forEach(item => {
+        item.addEventListener('click', () => {
+            const tabId = item.getAttribute('data-tab');
             switchTab(tabId);
         });
     });
 
-    // Initialize Charts
-    const revenueChartEl = document.getElementById('revenueChart');
-    const userActivityChartEl = document.getElementById('userActivityChart');
-    const trafficChartEl = document.getElementById('trafficChart');
-    const demographicsChartEl = document.getElementById('demographicsChart');
-
-    let revenueChart, userActivityChart, trafficChart, demographicsChart;
-
-    // Revenue Chart
-    if (revenueChartEl) {
-        const revenueCtx = revenueChartEl.getContext('2d');
-        revenueChart = new Chart(revenueCtx, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                datasets: [{
-                    label: 'Revenue',
-                    data: [65000, 59000, 80000, 81000, 76000, 95000],
-                    borderColor: '#6c5ce7',
-                    backgroundColor: 'rgba(108, 92, 231, 0.1)',
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.1)'
-                        }
-                    },
-                    x: {
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.1)'
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-    // User Activity Chart
-    if (userActivityChartEl) {
-        const userActivityCtx = userActivityChartEl.getContext('2d');
-        userActivityChart = new Chart(userActivityCtx, {
-            type: 'bar',
-            data: {
+    // Chart Data
+    const chartData = {
+        revenue: {
+            weekly: {
                 labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                datasets: [{
-                    label: 'Active Users',
-                    data: [120, 190, 300, 250, 200, 180, 230],
-                    backgroundColor: 'rgba(153, 102, 255, 0.5)',
-                    borderColor: 'rgba(153, 102, 255, 1)',
-                    borderWidth: 1
-                }]
+                data: [3200, 4100, 3800, 5200, 4800, 4300, 5800]
             },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: false
-                    }
+            monthly: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                data: [33000, 38000, 35000, 42000, 39000, 48000]
+            },
+            yearly: {
+                labels: ['2019', '2020', '2021', '2022', '2023'],
+                data: [380000, 420000, 390000, 450000, 480000]
+            }
+        },
+        userActivity: {
+            daily: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                data: [120, 150, 180, 140, 160, 190, 170]
+            },
+            weekly: {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                data: [850, 920, 880, 950]
+            }
+        },
+        traffic: {
+            labels: ['Direct', 'Social', 'Referral', 'Organic'],
+            data: [30, 25, 20, 25]
+        },
+        demographics: {
+            labels: ['18-24', '25-34', '35-44', '45-54', '55+'],
+            data: [15, 30, 25, 20, 10]
+        }
+    };
+
+    // Initialize Charts
+    function initializeCharts() {
+        // Revenue Chart
+        const revenueCtx = document.getElementById('revenueChart')?.getContext('2d');
+        if (revenueCtx) {
+            if (window.revenueChart) window.revenueChart.destroy();
+            window.revenueChart = new Chart(revenueCtx, {
+                type: 'line',
+                data: {
+                    labels: chartData.revenue.weekly.labels,
+                    datasets: [{
+                        label: 'Revenue',
+                        data: chartData.revenue.weekly.data,
+                        borderColor: '#6c5ce7',
+                        backgroundColor: 'rgba(108, 92, 231, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
                 },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.1)'
+                options: {
+                    plugins: {
+                        legend: {
+                            display: false
                         }
                     },
-                    x: {
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.1)'
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
                         }
                     }
                 }
-            }
-        });
-    }
+            });
+        }
 
-    // Traffic Sources Chart (Pie)
-    if (trafficChartEl) {
-        const trafficCtx = trafficChartEl.getContext('2d');
-        trafficChart = new Chart(trafficCtx, {
-            type: 'pie',
-            data: {
-                labels: ['Direct', 'Social', 'Referral', 'Organic'],
-                datasets: [{
-                    data: [30, 25, 20, 25],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.5)',
-                        'rgba(54, 162, 235, 0.5)',
-                        'rgba(255, 206, 86, 0.5)',
-                        'rgba(75, 192, 192, 0.5)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom'
+        // User Activity Chart
+        const userActivityCtx = document.getElementById('userActivityChart')?.getContext('2d');
+        if (userActivityCtx) {
+            if (window.userActivityChart) window.userActivityChart.destroy();
+            window.userActivityChart = new Chart(userActivityCtx, {
+                type: 'bar',
+                data: {
+                    labels: chartData.userActivity.daily.labels,
+                    datasets: [{
+                        label: 'Active Users',
+                        data: chartData.userActivity.daily.data,
+                        backgroundColor: 'rgba(153, 102, 255, 0.5)',
+                        borderColor: 'rgba(153, 102, 255, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        }
                     }
                 }
-            }
-        });
-    }
+            });
+        }
 
-    // Demographics Chart (Doughnut)
-    if (demographicsChartEl) {
-        const demographicsCtx = demographicsChartEl.getContext('2d');
-        demographicsChart = new Chart(demographicsCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['18-24', '25-34', '35-44', '45-54', '55+'],
-                datasets: [{
-                    data: [15, 30, 25, 20, 10],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.5)',
-                        'rgba(54, 162, 235, 0.5)',
-                        'rgba(255, 206, 86, 0.5)',
-                        'rgba(75, 192, 192, 0.5)',
-                        'rgba(153, 102, 255, 0.5)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom'
+        // Traffic Sources Chart
+        const trafficCtx = document.getElementById('trafficChart')?.getContext('2d');
+        if (trafficCtx) {
+            if (window.trafficChart) window.trafficChart.destroy();
+            window.trafficChart = new Chart(trafficCtx, {
+                type: 'pie',
+                data: {
+                    labels: chartData.traffic.labels,
+                    datasets: [{
+                        data: chartData.traffic.data,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.5)',
+                            'rgba(54, 162, 235, 0.5)',
+                            'rgba(255, 206, 86, 0.5)',
+                            'rgba(75, 192, 192, 0.5)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                color: '#fff'
+                            }
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
+
+        // Demographics Chart
+        const demographicsCtx = document.getElementById('demographicsChart')?.getContext('2d');
+        if (demographicsCtx) {
+            if (window.demographicsChart) window.demographicsChart.destroy();
+            window.demographicsChart = new Chart(demographicsCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: chartData.demographics.labels,
+                    datasets: [{
+                        data: chartData.demographics.data,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.5)',
+                            'rgba(54, 162, 235, 0.5)',
+                            'rgba(255, 206, 86, 0.5)',
+                            'rgba(75, 192, 192, 0.5)',
+                            'rgba(153, 102, 255, 0.5)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                color: '#fff'
+                            }
+                        }
+                    }
+                }
+            });
+        }
     }
 
     // Chart Period Toggles
     const chartActions = document.querySelectorAll('.chart-actions button');
     chartActions.forEach(button => {
         button.addEventListener('click', (e) => {
-            // Remove active class from siblings
-            const siblings = button.parentElement.children;
-            Array.from(siblings).forEach(sibling => {
-                sibling.classList.remove('active');
-            });
-            button.classList.add('active');
+            const chartCard = e.target.closest('.chart-card');
+            const buttons = chartCard.querySelectorAll('button');
+            const period = e.target.dataset.period;
+            const chartId = chartCard.querySelector('canvas').id;
 
-            // Get the period from the button text
-            const period = button.textContent.toLowerCase();
-            updateChartData(period);
+            // Update active button
+            buttons.forEach(btn => btn.classList.remove('active'));
+            e.target.classList.add('active');
+
+            // Update chart data
+            updateChartData(chartId, period);
         });
     });
 
-    function updateChartData(period) {
-        // Revenue Chart Data
-        const revenueData = {
-            weekly: [15000, 17000, 19000, 16000, 18000, 21000, 20000],
-            monthly: [65000, 59000, 80000, 81000, 76000, 95000],
-            yearly: [800000, 950000, 1100000, 980000]
-        };
-
-        // User Activity Data
-        const userActivityData = {
-            daily: [120, 190, 300, 250, 200, 180, 230],
-            weekly: [800, 1200, 1500, 1300, 900]
-        };
-
-        if (revenueChart && period in revenueData) {
-            revenueChart.data.datasets[0].data = revenueData[period];
-            revenueChart.data.labels = generateLabels(period, revenueData[period].length);
-            revenueChart.update();
+    function updateChartData(chartId, period) {
+        if (chartId === 'revenueChart' && window.revenueChart) {
+            const data = chartData.revenue[period];
+            window.revenueChart.data.labels = data.labels;
+            window.revenueChart.data.datasets[0].data = data.data;
+            window.revenueChart.update();
+        } else if (chartId === 'userActivityChart' && window.userActivityChart) {
+            const data = chartData.userActivity[period];
+            window.userActivityChart.data.labels = data.labels;
+            window.userActivityChart.data.datasets[0].data = data.data;
+            window.userActivityChart.update();
         }
-
-        if (userActivityChart && period in userActivityData) {
-            userActivityChart.data.datasets[0].data = userActivityData[period];
-            userActivityChart.data.labels = generateLabels(period, userActivityData[period].length);
-            userActivityChart.update();
-        }
-    }
-
-    function generateLabels(period, count) {
-        const labels = {
-            daily: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-            weekly: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5'],
-            monthly: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-            yearly: ['2020', '2021', '2022', '2023']
-        };
-        return labels[period] || Array.from({length: count}, (_, i) => `Item ${i + 1}`);
     }
 
     // Notification System
-    const notificationBell = document.querySelector('.notifications i');
-    const notificationBadge = document.querySelector('.notifications .badge');
     let notificationCount = 3;
+    const notificationBadge = document.querySelector('.badge');
+    const notificationBell = document.querySelector('.notifications i');
 
     function updateNotificationBadge() {
         if (notificationBadge) {
             notificationBadge.textContent = notificationCount;
-            notificationBadge.style.display = notificationCount > 0 ? 'block' : 'none';
+            notificationBadge.style.display = notificationCount > 0 ? 'flex' : 'none';
         }
     }
 
-    // Random notification generation
+    if (notificationBell) {
+        notificationBell.addEventListener('click', () => {
+            notificationCount = 0;
+            updateNotificationBadge();
+        });
+    }
+
+    // Generate random notifications periodically
     function generateRandomNotification() {
-        const notifications = [
+        const messages = [
             'New user registered',
             'Sales target achieved',
             'System update available',
-            'New message received',
-            'Backup completed'
+            'New message received'
         ];
-        return notifications[Math.floor(Math.random() * notifications.length)];
-    }
-
-    // Add notification click handler
-    if (notificationBell) {
-        notificationBell.addEventListener('click', () => {
-            // Reset notification count
-            notificationCount = 0;
-            updateNotificationBadge();
-
-            // Show notification panel (you can implement a custom panel)
-            alert('Notifications cleared!');
-        });
-
-        // Add random notification every 30 seconds
-        setInterval(() => {
-            if (notificationCount < 9) {  // Cap at 9 notifications
-                notificationCount++;
-                updateNotificationBadge();
-                console.log('New notification:', generateRandomNotification());
-            }
-        }, 30000);
-    }
-
-    // Initialize with dashboard tab
-    switchTab('dashboard');
-
-    // Initialize notification badge if it exists
-    const notificationBadgeInit = document.querySelector('.notifications .badge');
-    if (notificationBadgeInit) {
+        notificationCount++;
         updateNotificationBadge();
     }
+
+    setInterval(generateRandomNotification, 30000);
+
+    // Initialize dashboard
+    initializeCharts();
 });
