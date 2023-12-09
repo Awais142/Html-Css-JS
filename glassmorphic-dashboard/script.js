@@ -244,4 +244,126 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    // Notification System
+    const notificationPanel = document.querySelector('.notification-panel');
+    const notificationBtn = document.querySelector('.notifications');
+    const notificationList = document.querySelector('.notification-list');
+    const clearAllBtn = document.querySelector('.clear-all');
+    const overlay = document.createElement('div');
+    overlay.className = 'overlay';
+    document.body.appendChild(overlay);
+
+    // Profile Dropdown
+    const profileDropdown = document.querySelector('.profile-dropdown');
+    const profileBtn = document.querySelector('.profile');
+
+    // Toggle Notification Panel
+    notificationBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (profileDropdown.classList.contains('show')) {
+            profileDropdown.classList.remove('show');
+        }
+        notificationPanel.classList.toggle('show');
+        overlay.classList.toggle('show');
+        updateNotificationBadge();
+    });
+
+    // Toggle Profile Dropdown
+    profileBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (notificationPanel.classList.contains('show')) {
+            notificationPanel.classList.remove('show');
+        }
+        profileDropdown.classList.toggle('show');
+        overlay.classList.toggle('show');
+    });
+
+    // Close panels when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!notificationPanel.contains(e.target) && !notificationBtn.contains(e.target)) {
+            notificationPanel.classList.remove('show');
+        }
+        if (!profileDropdown.contains(e.target) && !profileBtn.contains(e.target)) {
+            profileDropdown.classList.remove('show');
+        }
+        if (!notificationPanel.classList.contains('show') && !profileDropdown.classList.contains('show')) {
+            overlay.classList.remove('show');
+        }
+    });
+
+    // Mark notification as read
+    document.querySelectorAll('.mark-read').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const notification = e.target.closest('.notification-item');
+            notification.classList.remove('unread');
+            button.style.display = 'none';
+            updateNotificationBadge();
+        });
+    });
+
+    // Clear all notifications
+    clearAllBtn.addEventListener('click', () => {
+        const notifications = document.querySelectorAll('.notification-item');
+        notifications.forEach(notification => {
+            notification.style.opacity = '0';
+            setTimeout(() => notification.remove(), 300);
+        });
+        updateNotificationBadge();
+    });
+
+    // Update notification badge
+    function updateNotificationBadge() {
+        const unreadCount = document.querySelectorAll('.notification-item.unread').length;
+        const badge = document.querySelector('.notifications .badge');
+        badge.textContent = unreadCount;
+        badge.style.display = unreadCount > 0 ? 'flex' : 'none';
+    }
+
+    // Add new notification
+    function addNotification(icon, text, type = '') {
+        const notification = document.createElement('div');
+        notification.className = 'notification-item unread animate-fade-in';
+        notification.innerHTML = `
+            <div class="notification-icon ${type}">
+                <i class="fas fa-${icon}"></i>
+            </div>
+            <div class="notification-content">
+                <p class="notification-text">${text}</p>
+                <span class="notification-time">Just now</span>
+            </div>
+            <button class="mark-read"><i class="fas fa-check"></i></button>
+        `;
+        
+        notificationList.insertBefore(notification, notificationList.firstChild);
+        updateNotificationBadge();
+    }
+
+    // Sample notification triggers
+    setInterval(() => {
+        const notifications = [
+            { icon: 'chart-line', text: 'New sales milestone reached!', type: 'success' },
+            { icon: 'exclamation-triangle', text: 'System update required', type: 'warning' },
+            { icon: 'user-plus', text: 'New user registration', type: '' }
+        ];
+        
+        if (Math.random() < 0.3) { // 30% chance every 30 seconds
+            const notification = notifications[Math.floor(Math.random() * notifications.length)];
+            addNotification(notification.icon, notification.text, notification.type);
+        }
+    }, 30000);
+
+    // Profile menu interactions
+    document.querySelectorAll('.profile-menu-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
+            const action = item.textContent.trim();
+            console.log(`Profile action clicked: ${action}`);
+            profileDropdown.classList.remove('show');
+            overlay.classList.remove('show');
+        });
+    });
+
+    // Initialize notification badge
+    updateNotificationBadge();
 });
