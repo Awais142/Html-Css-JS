@@ -94,34 +94,31 @@ body {
     border-radius: 50%;
     pointer-events: none;
     box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.5);
+    width: 30px;
+    height: 30px;
+    animation: animate 25s linear infinite;
+    opacity: 0.6;
 }
 
 .bubbles span:nth-child(even) {
-    background: linear-gradient(45deg, #8B5CF6, transparent);
+    background: linear-gradient(45deg, rgba(139, 92, 246, 0.5), transparent);
+    width: 40px;
+    height: 40px;
 }
 
 .bubbles span:nth-child(odd) {
-    background: linear-gradient(45deg, #EC4899, transparent);
-}
-
-.bubbles span {
-    width: 30px;
-    height: 30px;
-    animation: animate calc(45s / var(--i)) linear infinite;
-    opacity: 0;
-    animation-delay: calc(5s * var(--i));
+    background: linear-gradient(45deg, rgba(236, 72, 153, 0.5), transparent);
+    width: 35px;
+    height: 35px;
 }
 
 @keyframes animate {
     0% {
-        transform: translateY(100vh) scale(0);
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.5;
+        transform: translateY(100vh) scale(0.3);
+        opacity: 0.6;
     }
     100% {
-        transform: translateY(-10vh) scale(1);
+        transform: translateY(-100vh) scale(1);
         opacity: 0;
     }
 }

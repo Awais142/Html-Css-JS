@@ -1,10 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     const bubbles = document.querySelectorAll('.bubbles span');
     
-    // Randomize initial positions
+    // Randomize initial positions and delays
     bubbles.forEach(bubble => {
         bubble.style.left = `${Math.random() * 100}%`;
-        bubble.style.animationDelay = `${Math.random() * 2}s`;
+        bubble.style.animationDelay = `${Math.random() * 15}s`;
+        bubble.style.animationDuration = `${25 + Math.random() * 15}s`;
     });
 
     // Add mouse parallax effect to glass card
