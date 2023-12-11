@@ -107,15 +107,22 @@ body {
 .bubbles span {
     width: 30px;
     height: 30px;
-    animation: animate calc(15s / var(--i)) linear infinite;
+    animation: animate calc(45s / var(--i)) linear infinite;
+    opacity: 0;
+    animation-delay: calc(5s * var(--i));
 }
 
 @keyframes animate {
     0% {
         transform: translateY(100vh) scale(0);
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
     }
     100% {
         transform: translateY(-10vh) scale(1);
+        opacity: 0;
     }
 }
 
