@@ -161,7 +161,7 @@ body {
 @keyframes animate {
     0% {
         transform: translateY(100vh) scale(0.3);
-        opacity: 0.6;
+        opacity: 0.6;   
     }
     100% {
         transform: translateY(-100vh) scale(1);
