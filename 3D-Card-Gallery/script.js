@@ -20,39 +20,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const cards = document.querySelectorAll('.card');
     
     cards.forEach(card => {
-        card.addEventListener('mousemove', (e) => {
+        const cardInner = card.querySelector('.card-inner');
+        let isFlipped = false;
+
+        // Mouse enter event for hover effect
+        card.addEventListener('mouseenter', (e) => {
             if (!gallery.classList.contains('list-view')) {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                
-                const rotateX = (y - centerY) / 10;
-                const rotateY = (centerX - x) / 10;
-                
-                card.querySelector('.card-inner').style.transform = `
-                    rotateX(${rotateX}deg)
-                    rotateY(${rotateY}deg)
-                    scale(1.05)
-                `;
+                isFlipped = true;
+                cardInner.style.transform = 'rotateY(180deg)';
             }
         });
         
+        // Mouse leave event to reset
         card.addEventListener('mouseleave', () => {
             if (!gallery.classList.contains('list-view')) {
-                card.querySelector('.card-inner').style.transform = '';
+                isFlipped = false;
+                cardInner.style.transform = '';
             }
         });
         
-        // Add click event for mobile devices
-        card.addEventListener('click', () => {
+        // Touch event for mobile devices
+        card.addEventListener('touchstart', (e) => {
             if (window.innerWidth <= 768) {
-                const cardInner = card.querySelector('.card-inner');
-                const isFlipped = cardInner.style.transform.includes('180deg');
-                
-                cardInner.style.transform = isFlipped ? '' : 'rotateY(180deg)';
+                e.preventDefault();
+                isFlipped = !isFlipped;
+                cardInner.style.transform = isFlipped ? 'rotateY(180deg)' : '';
             }
         });
     });
@@ -62,6 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     buttons.forEach(button => {
         button.addEventListener('click', (e) => {
+            e.preventDefault();
             e.stopPropagation(); // Prevent card flip
             
             // Create ripple effect
