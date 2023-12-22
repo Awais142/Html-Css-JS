@@ -1,0 +1,89 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    background: #1a1a1a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+.neon-button {
+    position: relative;
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    color: #fff;
+    background: transparent;
+    border: 2px solid #0f0;
+    border-radius: 5px;
+    text-shadow: 0 0 5px #0f0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: 0.3s;
+}
+
+.neon-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.4), transparent);
+    transition: 0.5s;
+}
+
+.neon-button:hover {
+    background: #0f0;
+    color: #000;
+    box-shadow: 0 0 20px #0f0;
+    transition-delay: 0.1s;
+}
+
+.neon-button:hover::before {
+    left: 100%;
+}
+
+.neon-button.pink {
+    border-color: #ff69b4;
+    text-shadow: 0 0 5px #ff69b4;
+}
+
+.neon-button.pink:hover {
+    background: #ff69b4;
+    box-shadow: 0 0 20px #ff69b4;
+}
+
+.neon-button.pink::before {
+    background: linear-gradient(90deg, transparent, rgba(255, 105, 180, 0.4), transparent);
+}
+
+.neon-button.blue {
+    border-color: #00ffff;
+    text-shadow: 0 0 5px #00ffff;
+}
+
+.neon-button.blue:hover {
+    background: #00ffff;
+    box-shadow: 0 0 20px #00ffff;
+}
+
+.neon-button.blue::before {
+    background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.4), transparent);
+}
