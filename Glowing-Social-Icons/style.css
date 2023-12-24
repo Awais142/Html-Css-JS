@@ -1,0 +1,128 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    background: #222;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.icon {
+    position: relative;
+    background: #fff;
+    border-radius: 50%;
+    padding: 15px;
+    margin: 10px;
+    width: 50px;
+    height: 50px;
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    text-decoration: none;
+}
+
+.icon span {
+    position: absolute;
+    top: 0;
+    font-size: 14px;
+    background: #fff;
+    color: #fff;
+    padding: 5px 8px;
+    border-radius: 5px;
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.icon span::before {
+    position: absolute;
+    content: "";
+    height: 8px;
+    width: 8px;
+    background: #fff;
+    bottom: -3px;
+    left: 50%;
+    transform: translate(-50%) rotate(45deg);
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.icon:hover span {
+    top: -45px;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.icon:hover {
+    color: #fff;
+    transform: translateY(-5px);
+}
+
+/* Facebook */
+.facebook {
+    color: #1877F2;
+}
+.facebook:hover,
+.facebook:hover span,
+.facebook:hover span::before {
+    background: #1877F2;
+}
+
+/* Twitter */
+.twitter {
+    color: #1DA1F2;
+}
+.twitter:hover,
+.twitter:hover span,
+.twitter:hover span::before {
+    background: #1DA1F2;
+}
+
+/* Instagram */
+.instagram {
+    color: #E4405F;
+}
+.instagram:hover,
+.instagram:hover span,
+.instagram:hover span::before {
+    background: #E4405F;
+}
+
+/* Github */
+.github {
+    color: #333;
+}
+.github:hover,
+.github:hover span,
+.github:hover span::before {
+    background: #333;
+}
+
+/* YouTube */
+.youtube {
+    color: #CD201F;
+}
+.youtube:hover,
+.youtube:hover span,
+.youtube:hover span::before {
+    background: #CD201F;
+}
