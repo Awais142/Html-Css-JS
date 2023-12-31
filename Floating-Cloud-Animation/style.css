@@ -1,0 +1,95 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(180deg, #87CEEB, #E0F6FF);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.container {
+    position: relative;
+    width: 300px;
+    height: 300px;
+}
+
+.cloud {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: float 3s ease-in-out infinite;
+}
+
+.cloud-main {
+    width: 100px;
+    height: 30px;
+    background: #fff;
+    border-radius: 15px;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.cloud-circle {
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.c1 {
+    width: 35px;
+    height: 35px;
+    top: -20px;
+    left: 10px;
+}
+
+.c2 {
+    width: 50px;
+    height: 50px;
+    top: -30px;
+    left: 30px;
+}
+
+.c3 {
+    width: 35px;
+    height: 35px;
+    top: -20px;
+    right: 10px;
+}
+
+.sun {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: #FFD700;
+    border-radius: 50%;
+    top: 30px;
+    right: 30px;
+    box-shadow: 0 0 30px #FFD700;
+    animation: glow 4s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translate(-50%, -50%);
+    }
+    50% {
+        transform: translate(-50%, -60%);
+    }
+}
+
+@keyframes glow {
+    0%, 100% {
+        box-shadow: 0 0 30px #FFD700;
+    }
+    50% {
+        box-shadow: 0 0 50px #FFD700;
+    }
+}
