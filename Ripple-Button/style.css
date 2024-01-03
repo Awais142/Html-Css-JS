@@ -1,0 +1,90 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #1a1a1a;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+}
+
+.ripple-button {
+    position: relative;
+    padding: 15px 30px;
+    font-size: 18px;
+    color: white;
+    background: #2196f3;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: background 0.3s, transform 0.1s;
+    outline: none;
+}
+
+.ripple-button.purple {
+    background: #9c27b0;
+}
+
+.ripple-button.green {
+    background: #4caf50;
+}
+
+.ripple-button:hover {
+    opacity: 0.9;
+}
+
+.ripple-button:active {
+    transform: scale(0.97);
+}
+
+.ripple {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    pointer-events: none;
+    transform: scale(0);
+    animation: ripple 0.6s linear;
+}
+
+@keyframes ripple {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+/* Add subtle shadow */
+.ripple-button {
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Add hover shadow */
+.ripple-button:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+    .ripple-button {
+        padding: 12px 24px;
+        font-size: 16px;
+    }
+    
+    .container {
+        gap: 15px;
+    }
+}
