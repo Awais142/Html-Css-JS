@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Music Player</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="music-player">
+        <div class="player-header">
+            <i class="fas fa-chevron-down minimize-btn"></i>
+            <span>Now Playing</span>
+            <i class="fas fa-bars playlist-btn"></i>
+        </div>
+
+        <div class="album-art">
+            <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=300&ixid=MnwxfDB8MXxyYW5kb218MHx8bXVzaWN8fHx8fHwxNjk4MjU0NDQ4&ixlib=rb-4.0.3&q=80&w=300" alt="Album Art">
+            <div class="album-overlay"></div>
+        </div>
+
+        <div class="track-info">
+            <h2 class="track-title">Summer Nights</h2>
+            <p class="track-artist">Electronic Dreams</p>
+        </div>
+
+        <div class="progress-area">
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
+            <div class="time">
+                <span class="current">0:00</span>
+                <span class="duration">3:40</span>
+            </div>
+        </div>
+
+        <div class="controls">
+            <i class="fas fa-random"></i>
+            <i class="fas fa-step-backward"></i>
+            <div class="play-pause">
+                <i class="fas fa-play"></i>
+            </div>
+            <i class="fas fa-step-forward"></i>
+            <i class="fas fa-redo"></i>
+        </div>
+
+        <div class="volume-container">
+            <i class="fas fa-volume-up"></i>
+            <div class="volume-slider">
+                <div class="volume-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="playlist">
+        <div class="playlist-header">
+            <h3>Playlist</h3>
+            <i class="fas fa-times close-playlist"></i>
+        </div>
+        <ul class="playlist-songs">
+            <li class="song active">
+                <div class="song-info">
+                    <h4>Summer Nights</h4>
+                    <p>Electronic Dreams</p>
+                </div>
+                <span class="song-duration">3:40</span>
+            </li>
+            <li class="song">
+                <div class="song-info">
+                    <h4>Ocean Waves</h4>
+                    <p>Chill Beats</p>
+                </div>
+                <span class="song-duration">4:20</span>
+            </li>
+            <li class="song">
+                <div class="song-info">
+                    <h4>Mountain High</h4>
+                    <p>Nature Sounds</p>
+                </div>
+                <span class="song-duration">3:15</span>
+            </li>
+            <li class="song">
+                <div class="song-info">
+                    <h4>City Lights</h4>
+                    <p>Urban Mix</p>
+                </div>
+                <span class="song-duration">5:10</span>
+            </li>
+        </ul>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
