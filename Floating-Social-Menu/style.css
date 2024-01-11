@@ -5,24 +5,24 @@
 }
 
 body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     min-height: 100vh;
     background: #222327;
 }
 
 .menu {
-    position: relative;
-    width: 300px;
-    height: 300px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 250px;
+    height: 250px;
 }
 
 .menu .toggle {
     position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     width: 60px;
     height: 60px;
     background: #fff;
@@ -33,64 +33,77 @@ body {
     cursor: pointer;
     z-index: 10;
     font-size: 2em;
-    transition: transform 1.25s;
+    transition: 0.5s;
 }
 
 .menu.active .toggle {
-    transform: rotate(315deg);
+    transform: translate(-50%, -50%) rotate(315deg);
 }
 
 .menu li {
     position: absolute;
+    left: calc(50% - 22.5px);
+    top: calc(50% - 22.5px);
     list-style: none;
-    left: 0;
-    transform-origin: 150px;
+    transform-origin: 125px;
     transition: 0.5s;
-    transition-delay: calc(0.1s * var(--i));
-    transform: rotate(0deg) translateX(130px);
     opacity: 0;
+    transition-delay: calc(0.1s * var(--i));
 }
 
 .menu.active li {
-    transform: rotate(calc(360deg / 6 * var(--i))) translateX(130px);
     opacity: 1;
 }
 
+.menu.active li:nth-child(1) { transform: rotate(0deg) translateX(125px); }
+.menu.active li:nth-child(2) { transform: rotate(60deg) translateX(125px); }
+.menu.active li:nth-child(3) { transform: rotate(120deg) translateX(125px); }
+.menu.active li:nth-child(4) { transform: rotate(180deg) translateX(125px); }
+.menu.active li:nth-child(5) { transform: rotate(240deg) translateX(125px); }
+.menu.active li:nth-child(6) { transform: rotate(300deg) translateX(125px); }
+
 .menu li a {
+    width: 45px;
+    height: 45px;
+    background: #fff;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 50px;
-    height: 50px;
-    background: #fff;
     border-radius: 50%;
-    transform: rotate(calc(360deg / -6 * var(--i)));
     box-shadow: 0 3px 4px rgba(0, 0, 0, 0.15);
     color: #222327;
     transition: 0.3s;
 }
 
-.menu li:hover a {
+.menu li:nth-child(1) a { transform: rotate(0deg); }
+.menu li:nth-child(2) a { transform: rotate(-60deg); }
+.menu li:nth-child(3) a { transform: rotate(-120deg); }
+.menu li:nth-child(4) a { transform: rotate(-180deg); }
+.menu li:nth-child(5) a { transform: rotate(-240deg); }
+.menu li:nth-child(6) a { transform: rotate(-300deg); }
+
+.menu li a:hover {
+    transform: scale(1.3);
     background: #1877f2;
     color: #fff;
 }
 
-.menu li:nth-child(2):hover a {
+.menu li:nth-child(2) a:hover {
     background: #1da1f2;
 }
 
-.menu li:nth-child(3):hover a {
+.menu li:nth-child(3) a:hover {
     background: #e4405f;
 }
 
-.menu li:nth-child(4):hover a {
+.menu li:nth-child(4) a:hover {
     background: #0077b5;
 }
 
-.menu li:nth-child(5):hover a {
+.menu li:nth-child(5) a:hover {
     background: #333;
 }
 
-.menu li:nth-child(6):hover a {
+.menu li:nth-child(6) a:hover {
     background: #ff0000;
 }
