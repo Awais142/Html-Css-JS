@@ -1,0 +1,127 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #232323;
+    font-family: 'Arial', sans-serif;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    color: white;
+    text-align: center;
+    background: steelblue;
+    margin: 0;
+    font-weight: normal;
+    text-transform: uppercase;
+    line-height: 1.1;
+    padding: 20px 0;
+}
+
+.color-display {
+    font-size: 200%;
+}
+
+.stripe {
+    background: white;
+    height: 30px;
+    text-align: center;
+    color: black;
+}
+
+#message {
+    display: inline-block;
+    width: 20%;
+}
+
+button {
+    border: none;
+    background: none;
+    text-transform: uppercase;
+    height: 100%;
+    font-weight: 700;
+    color: steelblue;
+    letter-spacing: 1px;
+    font-size: inherit;
+    transition: all 0.3s;
+    outline: none;
+    padding: 0 10px;
+    cursor: pointer;
+}
+
+button:hover {
+    color: white;
+    background: steelblue;
+}
+
+.grid {
+    margin: 20px auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    max-width: 400px;
+}
+
+.square {
+    width: 100%;
+    padding-bottom: 100%;
+    border-radius: 15%;
+    background: #232323;
+    cursor: pointer;
+    transition: background 0.6s;
+    transform: scale(1);
+}
+
+.square:hover {
+    transform: scale(1.05);
+    transition: transform 0.2s;
+}
+
+.selected {
+    color: white;
+    background: steelblue;
+}
+
+/* Animation for correct guess */
+@keyframes correctGuess {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.correct {
+    animation: correctGuess 0.6s ease;
+}
+
+/* Animation for wrong guess */
+@keyframes wrongGuess {
+    0%, 100% { transform: scale(1); }
+    20%, 60% { transform: translateX(-5px); }
+    40%, 80% { transform: translateX(5px); }
+}
+
+.wrong {
+    animation: wrongGuess 0.4s ease;
+}
+
+@media (max-width: 500px) {
+    .grid {
+        max-width: 300px;
+    }
+    
+    button {
+        font-size: 0.8em;
+    }
+    
+    h1 {
+        font-size: 1.5em;
+    }
+}
