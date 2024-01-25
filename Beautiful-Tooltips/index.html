@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beautiful Tooltips</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Beautiful Tooltips Collection</h1>
+        
+        <div class="tooltip-grid">
+            <!-- Basic Tooltip -->
+            <div class="tooltip-wrapper">
+                <button class="tooltip-trigger" data-tooltip="Simple and elegant tooltip">
+                    Basic Tooltip
+                </button>
+            </div>
+
+            <!-- Gradient Tooltip -->
+            <div class="tooltip-wrapper">
+                <button class="tooltip-trigger gradient" data-tooltip="Beautiful gradient background effect">
+                    Gradient Style
+                </button>
+            </div>
+
+            <!-- Glass Effect -->
+            <div class="tooltip-wrapper">
+                <button class="tooltip-trigger glass" data-tooltip="Modern glassmorphism design">
+                    Glass Effect
+                </button>
+            </div>
+
+            <!-- Neon Effect -->
+            <div class="tooltip-wrapper">
+                <button class="tooltip-trigger neon" data-tooltip="Glowing neon border animation">
+                    Neon Glow
+                </button>
+            </div>
+
+            <!-- Arrow Directions -->
+            <div class="tooltip-wrapper">
+                <button class="tooltip-trigger top" data-tooltip="Tooltip on top">
+                    Top
+                </button>
+            </div>
+
+            <div class="tooltip-wrapper">
+                <button class="tooltip-trigger right" data-tooltip="Tooltip on right">
+                    Right
+                </button>
+            </div>
+
+            <div class="tooltip-wrapper">
+                <button class="tooltip-trigger bottom" data-tooltip="Tooltip on bottom">
+                    Bottom
+                </button>
+            </div>
+
+            <div class="tooltip-wrapper">
+                <button class="tooltip-trigger left" data-tooltip="Tooltip on left">
+                    Left
+                </button>
+            </div>
+
+            <!-- Icon Tooltips -->
+            <div class="tooltip-wrapper">
+                <button class="tooltip-trigger icon" data-tooltip="Share this content">
+                    <i class="fas fa-share-alt"></i>
+                </button>
+            </div>
+
+            <div class="tooltip-wrapper">
+                <button class="tooltip-trigger icon" data-tooltip="Add to favorites">
+                    <i class="fas fa-heart"></i>
+                </button>
+            </div>
+
+            <!-- Custom HTML Tooltip -->
+            <div class="tooltip-wrapper">
+                <button class="tooltip-trigger custom" data-tooltip="
+                    <div class='custom-tooltip'>
+                        <img src='https://picsum.photos/50/50' alt='Preview'>
+                        <h3>Custom Content</h3>
+                        <p>Tooltips can contain images and formatted text!</p>
+                    </div>
+                ">
+                    Custom HTML
+                </button>
+            </div>
+
+            <!-- Interactive Tooltip -->
+            <div class="tooltip-wrapper">
+                <button class="tooltip-trigger interactive" data-tooltip="
+                    <div class='interactive-tooltip'>
+                        <button onclick='alert(\"Button clicked!\")'>Click me!</button>
+                    </div>
+                ">
+                    Interactive
+                </button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
