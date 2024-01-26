@@ -1,9 +1,15 @@
 // Handle custom HTML tooltips
 document.querySelectorAll('.tooltip-trigger.custom, .tooltip-trigger.interactive').forEach(trigger => {
+    // Remove the default tooltip behavior
+    trigger.removeAttribute('data-tooltip');
+    
     trigger.addEventListener('mouseenter', (e) => {
         // Remove existing custom tooltips
         document.querySelectorAll('.custom-tooltip-container').forEach(el => el.remove());
 
+        // Get the HTML content from a data attribute
+        const tooltipHTML = trigger.getAttribute('data-html-content');
+        
         // Create tooltip container
         const tooltipContainer = document.createElement('div');
         tooltipContainer.className = 'custom-tooltip-container';
@@ -20,7 +26,7 @@ document.querySelectorAll('.tooltip-trigger.custom, .tooltip-trigger.interactive
         `;
 
         // Insert HTML content
-        tooltipContainer.innerHTML = trigger.getAttribute('data-tooltip');
+        tooltipContainer.innerHTML = tooltipHTML;
 
         // Position the tooltip
         document.body.appendChild(tooltipContainer);
@@ -51,20 +57,27 @@ document.querySelectorAll('.tooltip-trigger').forEach(button => {
     button.addEventListener('click', function(e) {
         const ripple = document.createElement('span');
         ripple.classList.add('ripple');
-        this.appendChild(ripple);
+        
+        // Set ripple styles
+        ripple.style.cssText = `
+            position: absolute;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            pointer-events: none;
+        `;
 
         const rect = button.getBoundingClientRect();
         const size = Math.max(rect.width, rect.height);
         const x = e.clientX - rect.left - size / 2;
         const y = e.clientY - rect.top - size / 2;
 
-        ripple.style.cssText = `
-            width: ${size}px;
-            height: ${size}px;
-            top: ${y}px;
-            left: ${x}px;
-        `;
+        ripple.style.width = ripple.style.height = `${size}px`;
+        ripple.style.left = `${x}px`;
+        ripple.style.top = `${y}px`;
 
+        button.appendChild(ripple);
         setTimeout(() => ripple.remove(), 600);
     });
 });
