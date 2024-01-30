@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Counter</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Word Counter</h1>
+        <div class="counter-box">
+            <textarea 
+                id="text-input" 
+                placeholder="Start typing here..."
+                autofocus
+            ></textarea>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <span class="count" id="character-count">0</span>
+                    <span class="label">Characters</span>
+                </div>
+                <div class="stat-item">
+                    <span class="count" id="word-count">0</span>
+                    <span class="label">Words</span>
+                </div>
+                <div class="stat-item">
+                    <span class="count" id="sentence-count">0</span>
+                    <span class="label">Sentences</span>
+                </div>
+            </div>
+
+            <div class="buttons">
+                <button id="clear-btn" class="btn">Clear Text</button>
+                <button id="copy-btn" class="btn">Copy Text</button>
+            </div>
+
+            <div id="message" class="message"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
