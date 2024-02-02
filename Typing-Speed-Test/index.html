@@ -3,40 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Typing Speed Test</title>
+    <title>Modern Typing Speed Test</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <div class="heading">
+        <div class="header">
             <h1>Test Your Typing Speed</h1>
-            <div class="timer">Time: <span>60</span>s</div>
+            <div class="timer">
+                <div class="timer-box">
+                    <span class="time">60</span>
+                    <span class="label">seconds</span>
+                </div>
+            </div>
         </div>
+
         <div class="content-box">
             <div class="typing-text">
                 <p></p>
             </div>
-            <div class="content">
-                <ul class="result-details">
-                    <li class="time">
-                        <p>Time Left:</p>
-                        <span>60</span>s
-                    </li>
-                    <li class="mistake">
-                        <p>Mistakes:</p>
-                        <span>0</span>
-                    </li>
-                    <li class="wpm">
-                        <p>WPM:</p>
-                        <span>0</span>
-                    </li>
-                    <li class="cpm">
-                        <p>CPM:</p>
-                        <span>0</span>
-                    </li>
-                </ul>
-                <button>Try Again</button>
+            
+            <div class="stats-box">
+                <div class="stats-card">
+                    <div class="title">Time Left</div>
+                    <div class="value"><span>60</span>s</div>
+                </div>
+                <div class="stats-card">
+                    <div class="title">Mistakes</div>
+                    <div class="value"><span>0</span></div>
+                </div>
+                <div class="stats-card">
+                    <div class="title">WPM</div>
+                    <div class="value"><span>0</span></div>
+                </div>
+                <div class="stats-card">
+                    <div class="title">CPM</div>
+                    <div class="value"><span>0</span></div>
+                </div>
             </div>
+
+            <button class="try-again-btn">Try Again</button>
         </div>
     </div>
     <script src="script.js"></script>
