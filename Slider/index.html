@@ -7,29 +7,32 @@
     <title>Image Slider</title>
   </head>
   <body>
-    <div class="slider">
-      <div class="slides">
-        <div class="slide active">
-          <img
-            src="https://via.placeholder.com/800x400/1abc9c/ffffff?text=Slide+1"
-            alt="Slide 1"
-          />
+    <div class="container">
+      <h1>A Minimal Image Slider</h1>
+      <div class="slider">
+        <div class="slides">
+          <div class="slide active">
+            <img
+              src="https://images.pexels.com/photos/1868666/pexels-photo-1868666.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=400&w=800"
+              alt="Slide 1"
+            />
+          </div>
+          <div class="slide">
+            <img
+              src="https://images.pexels.com/photos/1868666/pexels-photo-1868666.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=400&w=800"
+              alt="Slide 2"
+            />
+          </div>
+          <div class="slide">
+            <img
+              src="https://images.pexels.com/photos/1778099/pexels-photo-1778099.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=400&w=800"
+              alt="Slide 3"
+            />
+          </div>
         </div>
-        <div class="slide">
-          <img
-            src="https://via.placeholder.com/800x400/3498db/ffffff?text=Slide+2"
-            alt="Slide 2"
-          />
-        </div>
-        <div class="slide">
-          <img
-            src="https://via.placeholder.com/800x400/e74c3c/ffffff?text=Slide+3"
-            alt="Slide 3"
-          />
-        </div>
+        <button class="prev" onclick="changeSlide(-1)">&#10094;</button>
+        <button class="next" onclick="changeSlide(1)">&#10095;</button>
       </div>
-      <button class="prev" onclick="changeSlide(-1)">&#10094;</button>
-      <button class="next" onclick="changeSlide(1)">&#10095;</button>
     </div>
 
     <script src="script.js"></script>
